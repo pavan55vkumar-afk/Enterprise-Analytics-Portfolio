@@ -1,0 +1,437 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Pavan Kumar Vaikutherisal — Resume</title>
+  <style>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Georgia', 'Times New Roman', serif;
+      font-size: 10.5pt;
+      color: #1a1a1a;
+      background: #f4f4f4;
+      padding: 30px 0;
+    }
+
+    .page {
+      width: 794px;
+      margin: 0 auto;
+      background: #ffffff;
+      padding: 48px 52px;
+      box-shadow: 0 2px 16px rgba(0,0,0,0.10);
+    }
+
+    /* Header */
+    .header {
+      border-bottom: 2.5px solid #1a1a1a;
+      padding-bottom: 12px;
+      margin-bottom: 16px;
+    }
+
+    .header h1 {
+      font-family: 'Arial', sans-serif;
+      font-size: 22pt;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: #1a1a1a;
+      margin-bottom: 5px;
+    }
+
+    .contact-line {
+      font-family: 'Arial', sans-serif;
+      font-size: 8.5pt;
+      color: #444;
+      letter-spacing: 0.3px;
+    }
+
+    .contact-line a {
+      color: #444;
+      text-decoration: none;
+    }
+
+    .contact-line span {
+      margin: 0 6px;
+      color: #999;
+    }
+
+    /* Section */
+    .section {
+      margin-bottom: 18px;
+    }
+
+    .section-title {
+      font-family: 'Arial', sans-serif;
+      font-size: 8pt;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #1a1a1a;
+      border-bottom: 1px solid #cccccc;
+      padding-bottom: 3px;
+      margin-bottom: 10px;
+    }
+
+    /* Summary */
+    .summary p {
+      font-size: 10pt;
+      line-height: 1.65;
+      color: #2a2a2a;
+    }
+
+    /* Skills Grid */
+    .skills-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 6px 24px;
+    }
+
+    .skill-row {
+      font-size: 9.5pt;
+      line-height: 1.55;
+    }
+
+    .skill-label {
+      font-family: 'Arial', sans-serif;
+      font-weight: 700;
+      font-size: 8.5pt;
+      color: #1a1a1a;
+    }
+
+    .skill-value {
+      color: #333;
+    }
+
+    /* Job Entry */
+    .job {
+      margin-bottom: 16px;
+    }
+
+    .job-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 1px;
+    }
+
+    .job-company {
+      font-family: 'Arial', sans-serif;
+      font-weight: 700;
+      font-size: 10.5pt;
+      color: #1a1a1a;
+    }
+
+    .job-location {
+      font-family: 'Arial', sans-serif;
+      font-size: 9pt;
+      color: #555;
+      text-align: right;
+    }
+
+    .job-title-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    .job-title {
+      font-family: 'Arial', sans-serif;
+      font-size: 9.5pt;
+      font-style: italic;
+      color: #333;
+    }
+
+    .job-date {
+      font-family: 'Arial', sans-serif;
+      font-size: 9pt;
+      color: #666;
+      white-space: nowrap;
+    }
+
+    ul.bullets {
+      padding-left: 16px;
+      list-style-type: disc;
+    }
+
+    ul.bullets li {
+      font-size: 9.5pt;
+      line-height: 1.6;
+      color: #2a2a2a;
+      margin-bottom: 3px;
+    }
+
+    ul.bullets li::marker {
+      color: #888;
+    }
+
+    /* Projects */
+    .project {
+      margin-bottom: 11px;
+    }
+
+    .project-title {
+      font-family: 'Arial', sans-serif;
+      font-weight: 700;
+      font-size: 9.5pt;
+      color: #1a1a1a;
+      margin-bottom: 2px;
+    }
+
+    .project-meta {
+      font-family: 'Arial', sans-serif;
+      font-size: 8.5pt;
+      color: #777;
+      margin-bottom: 3px;
+    }
+
+    .project p {
+      font-size: 9.5pt;
+      line-height: 1.6;
+      color: #2a2a2a;
+    }
+
+    /* Education */
+    .edu-row {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 6px;
+    }
+
+    .edu-left .degree {
+      font-family: 'Arial', sans-serif;
+      font-weight: 700;
+      font-size: 9.5pt;
+      color: #1a1a1a;
+    }
+
+    .edu-left .institution {
+      font-size: 9pt;
+      color: #444;
+      font-style: italic;
+    }
+
+    .edu-right {
+      font-family: 'Arial', sans-serif;
+      font-size: 9pt;
+      color: #666;
+      text-align: right;
+      white-space: nowrap;
+    }
+
+    /* Certifications */
+    .cert-list {
+      padding-left: 16px;
+      list-style-type: disc;
+    }
+
+    .cert-list li {
+      font-size: 9.5pt;
+      line-height: 1.65;
+      color: #2a2a2a;
+    }
+
+    .cert-list li::marker {
+      color: #888;
+    }
+
+    /* Print */
+    @media print {
+      body {
+        background: white;
+        padding: 0;
+      }
+      .page {
+        box-shadow: none;
+        padding: 32px 40px;
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="page">
+
+    <!-- HEADER -->
+    <div class="header">
+      <h1>Pavan Kumar Vaikutherisal</h1>
+      <div class="contact-line">
+        pavan55vkumar@gmail.com
+        <span>|</span>
+        <a href="https://linkedin.com/in/pavankumarv55" target="_blank">linkedin.com/in/pavankumarv55</a>
+        <span>|</span>
+        Hyderabad, India &nbsp;&mdash;&nbsp; Open to relocate: Bengaluru
+      </div>
+    </div>
+
+    <!-- SUMMARY -->
+    <div class="section summary">
+      <div class="section-title">Professional Summary</div>
+      <p>
+        Business and process analyst with 3+ years of hands-on experience in operational reporting, process standardization,
+        KPI governance, and workflow optimization — primarily within Deloitte's consulting operations. I work at the intersection
+        of process analysis and data: mapping what is actually broken, quantifying the gap, and fixing it in a way that sticks.
+      </p>
+      <br />
+      <p>
+        At Deloitte, I own QA governance, SLA/TAT tracking, and MIS reporting for a healthcare operations segment processing
+        USD 2,000–6,000 in daily claim throughput. I have built dashboards that replaced manual reporting, automated data
+        workflows in Alteryx, and led process documentation initiatives across cross-functional teams. At MediaMint, I handled
+        CRM operations, campaign analytics, and stakeholder reporting for an international client base.
+      </p>
+    </div>
+
+    <!-- CORE SKILLS -->
+    <div class="section">
+      <div class="section-title">Core Skills</div>
+      <div class="skills-grid">
+        <div class="skill-row">
+          <span class="skill-label">Process &amp; Operations: </span>
+          <span class="skill-value">Process Mapping, Workflow Analysis, SLA/TAT Monitoring, Root Cause Analysis, Process Standardization, Continuous Improvement, Operational Governance</span>
+        </div>
+        <div class="skill-row">
+          <span class="skill-label">Analytics &amp; Reporting: </span>
+          <span class="skill-value">KPI Dashboard Development, MIS Reporting, Quantitative Analysis, Trend Analysis, Data Validation, Performance Measurement</span>
+        </div>
+        <div class="skill-row">
+          <span class="skill-label">Tools: </span>
+          <span class="skill-value">Advanced Excel (Pivots, XLOOKUP, Macros), Power BI, Tableau, Alteryx Designer Core, Salesforce, Zendesk, JIRA, SharePoint, SQL, GA4, SAP FICO</span>
+        </div>
+        <div class="skill-row">
+          <span class="skill-label">Collaboration &amp; Governance: </span>
+          <span class="skill-value">Stakeholder Reporting, Cross-functional Coordination, Executive Communication, SharePoint Governance, QA Controls, Process Documentation</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- EXPERIENCE -->
+    <div class="section">
+      <div class="section-title">Professional Experience</div>
+
+      <!-- Deloitte -->
+      <div class="job">
+        <div class="job-header">
+          <div class="job-company">Deloitte Consulting Pvt. Ltd.</div>
+          <div class="job-location">Hyderabad, India</div>
+        </div>
+        <div class="job-title-row">
+          <div class="job-title">Lead Junior Associate — Operations Analytics &amp; Process Governance</div>
+          <div class="job-date">Jan 2025 – Present</div>
+        </div>
+        <ul class="bullets">
+          <li>Own end-to-end QA governance for pilot healthcare operations segments covering USD 2,000–6,000 in daily claim throughput — reviewing process adherence, flagging exceptions, and maintaining audit-ready documentation.</li>
+          <li>Built and maintain a segment KPI performance dashboard in Excel (Pivot Tables, XLOOKUP, conditional formatting) used by senior leadership for weekly operational reviews — eliminated manual reporting effort that previously took 3+ hours per week.</li>
+          <li>Lead SLA/TAT monitoring across segments; identify recurring cycle time violations through root cause analysis and escalate with structured corrective action recommendations.</li>
+          <li>Automated data cleaning, filtering, and transformation workflows using Alteryx — reduced manual data handling time and improved consistency in reporting inputs.</li>
+          <li>Act as Pod Lead and Segments Lead for cross-functional teams; coordinate between QA, reporting, and operations workstreams to ensure alignment on process standards and delivery timelines.</li>
+          <li>Maintain SharePoint-based governance repositories including SOPs, process maps, and performance trackers — ensuring version control and accessibility across distributed teams.</li>
+          <li>Produce weekly and monthly MIS reports for senior leadership, consolidating data from 3+ operational segments into a single master reporting file with trend analysis and commentary.</li>
+          <li>Conduct root cause analysis on operational anomalies and reporting discrepancies; document findings and drive process corrections with relevant teams.</li>
+        </ul>
+      </div>
+
+      <!-- MediaMint Campaign Manager -->
+      <div class="job">
+        <div class="job-header">
+          <div class="job-company">MediaMint</div>
+          <div class="job-location">Hyderabad, India</div>
+        </div>
+        <div class="job-title-row">
+          <div class="job-title">Campaign Manager — Analytics &amp; Performance Reporting</div>
+          <div class="job-date">Jul 2024 – Dec 2024</div>
+        </div>
+        <ul class="bullets">
+          <li>Managed campaign analytics reporting for international clients using CM360, GA4, and Google Tag Manager; delivered weekly Tableau dashboards to stakeholders across geographies.</li>
+          <li>Identified recurring reporting gaps in campaign performance data and standardized the weekly report structure — contributed to a 15% reduction in client escalations over the engagement period.</li>
+          <li>Coordinated with cross-functional teams (media ops, client success, data) to resolve workflow issues affecting report delivery timelines.</li>
+          <li>Translated raw campaign performance data into actionable summaries for non-technical stakeholders.</li>
+        </ul>
+      </div>
+
+      <!-- MediaMint Ops Specialist -->
+      <div class="job">
+        <div class="job-header">
+          <div class="job-company">MediaMint</div>
+          <div class="job-location">Hyderabad, India</div>
+        </div>
+        <div class="job-title-row">
+          <div class="job-title">Customer Operations Specialist — Reporting &amp; CRM Data Support</div>
+          <div class="job-date">Apr 2023 – Jul 2024</div>
+        </div>
+        <ul class="bullets">
+          <li>Built and maintained SLA/TAT monitoring trackers in Google Sheets with automated status flags — tracked 250–330 cases per month across Salesforce and Zendesk platforms.</li>
+          <li>Conducted CRM data validation and cleansing to ensure accuracy across operational records; flagged data quality issues and coordinated fixes with the operations team.</li>
+          <li>Supported process documentation for recurring operational workflows, reducing onboarding time for new team members handling CRM queues.</li>
+          <li>Managed high-volume operational data in Salesforce and Zendesk, ensuring SLA compliance and resolution quality across customer operations workflows.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- PROJECTS -->
+    <div class="section">
+      <div class="section-title">Key Projects</div>
+
+      <div class="project">
+        <div class="project-title">Segment KPI Performance Dashboard</div>
+        <div class="project-meta">Deloitte &nbsp;|&nbsp; 2025 &nbsp;|&nbsp; Excel, Pivot Tables, XLOOKUP, Conditional Formatting</div>
+        <p>Built a consolidated Excel dashboard for healthcare operations segments. Replaced a fragmented, manual reporting process that required input from multiple teams. Dashboard now serves as the standard weekly performance reporting tool for senior leadership.</p>
+      </div>
+
+      <div class="project">
+        <div class="project-title">Alteryx Data Workflow Automation</div>
+        <div class="project-meta">Deloitte &nbsp;|&nbsp; 2025 &nbsp;|&nbsp; Alteryx Designer</div>
+        <p>Designed and implemented an Alteryx workflow to automate data cleaning, filtering, and transformation for weekly MIS reporting inputs. Eliminated recurring manual effort and reduced data preparation errors across reporting cycles.</p>
+      </div>
+
+      <div class="project">
+        <div class="project-title">SLA/TAT Operational Monitoring Tracker</div>
+        <div class="project-meta">MediaMint &nbsp;|&nbsp; 2023–24 &nbsp;|&nbsp; Google Sheets, Salesforce, Zendesk</div>
+        <p>Designed a Google Sheets-based SLA monitoring tracker with automated status flags and case-level TAT calculations for a team processing 250–330 monthly cases. Gave operations managers real-time visibility into breach risk without manual status checks.</p>
+      </div>
+
+      <div class="project">
+        <div class="project-title">Campaign Performance Reporting Standardization</div>
+        <div class="project-meta">MediaMint &nbsp;|&nbsp; 2024 &nbsp;|&nbsp; Tableau, CM360, GA4</div>
+        <p>Standardized weekly campaign performance reporting templates across client accounts, reducing inconsistencies in stakeholder-facing data and contributing to a measurable reduction in escalations.</p>
+      </div>
+    </div>
+
+    <!-- EDUCATION -->
+    <div class="section">
+      <div class="section-title">Education</div>
+      <div class="edu-row">
+        <div class="edu-left">
+          <div class="degree">MBA, Operations Management</div>
+          <div class="institution">IGNOU</div>
+        </div>
+        <div class="edu-right">Expected 2027</div>
+      </div>
+      <div class="edu-row">
+        <div class="edu-left">
+          <div class="degree">BBA, Business Analytics</div>
+          <div class="institution">KL University</div>
+        </div>
+        <div class="edu-right">2023</div>
+      </div>
+    </div>
+
+    <!-- CERTIFICATIONS -->
+    <div class="section">
+      <div class="section-title">Certifications</div>
+      <ul class="cert-list">
+        <li>Alteryx Designer Core Certified (2026)</li>
+        <li>AWS Generative AI &amp; Bedrock — Deloitte Internal (2025)</li>
+        <li>SAP FICO — Finance &amp; Controlling (2025)</li>
+        <li>Reading Financial Statements &amp; Career in Finance — CFI (2025)</li>
+        <li>Industry Proficiency Program: Life Sciences &amp; Healthcare — Deloitte (2025)</li>
+      </ul>
+    </div>
+
+  </div>
+</body>
+</html>

@@ -1,0 +1,352 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Pavan Kumar Vaikutherisal | Data &amp; Business Analyst Portfolio</title>
+  <meta name="description" content="Portfolio of Pavan Kumar Vaikutherisal showcasing business analytics projects in cohort retention, SLA operations, statistical A/B testing, and data quality audits.">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <!-- NAVIGATION -->
+  <header class="site-header" id="site-header">
+    <a class="brand" href="#home">PK<span>.</span></a>
+    <nav aria-label="Primary navigation">
+      <a href="#home">Home</a>
+      <a href="#about">About</a>
+      <a href="#skills">Skills</a>
+      <a href="#projects">Projects</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <!-- HERO SECTION -->
+    <section class="hero" id="home">
+      <div class="hero-copy">
+        <p class="eyebrow">PORTFOLIO</p>
+        <h1>Pavan Kumar Vaikutherisal</h1>
+        <p class="hero-title">Data Analyst / Business Analyst</p>
+        <p class="hero-text">
+          I turn operational logs and transactional databases into clear, validated metrics 
+          and process recommendations that operations and product teams can act on.
+        </p>
+        <div class="hero-actions">
+          <a class="button primary" href="#projects" id="btn-projects">View Projects</a>
+          <a class="button secondary" href="https://github.com/pavan55vkumar-afk/Enterprise-Analytics-Portfolio" target="_blank" rel="noopener" id="btn-github">GitHub</a>
+          <a class="button secondary" href="https://www.linkedin.com/in/pavankumarv55/" target="_blank" rel="noopener" id="btn-linkedin">LinkedIn</a>
+          <a class="button secondary" href="assets/Pavan_Kumar_Resume.html" target="_blank" id="btn-resume">Resume</a>
+        </div>
+      </div>
+      <aside class="profile-card" id="profile-card">
+        <div>
+          <span class="status-dot"></span>
+          <span>Open to relocation: Bengaluru</span>
+        </div>
+        <h2>Profile Summary</h2>
+        <p>Lead Junior Associate at Deloitte Consulting. Formerly Campaign Manager and Customer Operations Specialist at MediaMint.</p>
+        <ul>
+          <li>SLA / TAT Queue Monitoring</li>
+          <li>Operational KPI reporting</li>
+          <li>Data Validation &amp; Profiling</li>
+          <li>Business process documentation</li>
+        </ul>
+      </aside>
+    </section>
+
+    <!-- PORTFOLIO SUMMARY STATS -->
+    <section class="portfolio-summary" aria-label="Portfolio summary" id="portfolio-summary">
+      <article><strong>4</strong><span>Data Projects</span></article>
+      <article><strong>8,454</strong><span>Records Analyzed</span></article>
+      <article><strong>SQL · Python</strong><span>Languages Used</span></article>
+      <article><strong>Power BI · Excel</strong><span>Visualisation Tools</span></article>
+    </section>
+
+    <!-- ABOUT SECTION -->
+    <section class="about-section" id="about">
+      <h2>About Me</h2>
+      <div class="about-content">
+        <p>
+          I am an operational and process analyst with over 3 years of experience in standardizing workflows, tracking SLAs, 
+          and building KPI reports at Deloitte and MediaMint. I focus on translating raw database transactions into clear, 
+          action-ready dashboards and process metrics for leadership.
+        </p>
+        <p>
+          I combine my BBA training in business analytics and ongoing MBA studies in operations management to build clean, 
+          reproducible analytics assets. I am committed to logical business framing, rigorous data validation, and honest communication of results.
+        </p>
+      </div>
+    </section>
+
+    <!-- SKILLS SECTION -->
+    <section class="skills-section" id="skills">
+      <h2>Skills</h2>
+      <div class="skills-grid-layout">
+        <div class="skills-group">
+          <h3>SQL</h3>
+          <p>Query writing, Common Table Expressions (CTEs), Window functions (NTILE, LAG), Aggregate analysis, DuckDB.</p>
+        </div>
+        <div class="skills-group">
+          <h3>BI &amp; Visualisation</h3>
+          <p>Power BI dashboards, Tableau charts, Advanced Excel (Pivot Tables, XLOOKUP, standard charts).</p>
+        </div>
+        <div class="skills-group">
+          <h3>Python</h3>
+          <p>Data manipulation (pandas), numpy, scripting, automated runners, custom statistical testing, matplotlib/seaborn.</p>
+        </div>
+        <div class="skills-group">
+          <h3>Data Quality &amp; Governance</h3>
+          <p>Completeness auditing, uniqueness tracking, validity testing, outlier detection (IQR method), schema constraint designs.</p>
+        </div>
+        <div class="skills-group">
+          <h3>Tools</h3>
+          <p>Salesforce CRM, Zendesk Support, JIRA issue tracking, SharePoint version control, SAP FICO module.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PROJECTS SECTION -->
+    <section class="projects-section" id="projects">
+      <h2>Case Studies</h2>
+
+      <!-- CASE STUDY 1 -->
+      <div class="case-study" id="case-cohort">
+        <div class="case-heading">
+          <div>
+            <p class="case-number">CASE STUDY 01</p>
+            <h3>Customer Revenue, Retention, and RFM Analysis</h3>
+          </div>
+          <div class="tool-tags">
+            <span>SQL</span><span>DuckDB</span><span>Cohorts</span>
+            <a class="github-project-link" href="https://github.com/pavan55vkumar-afk/Enterprise-Analytics-Portfolio/tree/main/project_1_sales_cohort" target="_blank" rel="noopener" id="github-link-p1">View on GitHub ↗</a>
+          </div>
+        </div>
+
+        <div class="story-grid">
+          <article class="story-card">
+            <span class="story-label">THE PROBLEM</span>
+            <p>Overall revenue numbers did not show customer quality. Leadership needed to understand which cohorts return and where drop-offs happen.</p>
+          </article>
+          <article class="story-card">
+            <span class="story-label">MY APPROACH</span>
+            <p>Calculated monthly growth via SQL CTEs; assigned customers to acquisition cohorts; and scored customer recency, frequency, and monetary value using window NTILE functions.</p>
+          </article>
+          <article class="story-card">
+            <span class="story-label">KEY RESULT</span>
+            <p>Segmented the customer base into actionable priority groups (like Champions and At-Risk), revealing specific drop-off points after signup month.</p>
+          </article>
+        </div>
+
+        <div class="metric-row">
+          <article class="metric"><span>Completed Revenue</span><strong>₹53.72L</strong><small>887 completed orders</small></article>
+          <article class="metric"><span>Active Customers</span><strong>395</strong><small>of 500 customers</small></article>
+          <article class="metric"><span>Repeat Purchasers</span><strong>63.0%</strong><small>249 active repeat customers</small></article>
+          <article class="metric"><span>Order Return Rate</span><strong>4.5%</strong><small>requires category monitoring</small></article>
+        </div>
+
+        <div class="charts-gallery">
+          <article class="visual-card">
+            <h4>Monthly Revenue &amp; MoM Growth</h4>
+            <img src="assets/monthly_revenue.png" alt="Monthly Revenue Trend and Growth Chart" class="project-chart">
+          </article>
+          <article class="visual-card">
+            <h4>Cohort Retention Heatmap</h4>
+            <img src="assets/cohort_retention_heatmap.png" alt="Cohort Retention Heatmap Chart" class="project-chart">
+          </article>
+          <article class="visual-card">
+            <h4>RFM Segment Distribution</h4>
+            <img src="assets/rfm_distribution.png" alt="RFM Segment Distribution Chart" class="project-chart">
+          </article>
+        </div>
+      </div>
+
+      <!-- CASE STUDY 2 -->
+      <div class="case-study" id="case-sla">
+        <div class="case-heading">
+          <div>
+            <p class="case-number">CASE STUDY 02</p>
+            <h3>Operational SLA Bottleneck Analysis</h3>
+          </div>
+          <div class="tool-tags">
+            <span>Python</span><span>Pandas</span><span>RCA</span>
+            <a class="github-project-link" href="https://github.com/pavan55vkumar-afk/Enterprise-Analytics-Portfolio/tree/main/project_2_operations_rca" target="_blank" rel="noopener" id="github-link-p2">View on GitHub ↗</a>
+          </div>
+        </div>
+
+        <div class="story-grid">
+          <article class="story-card">
+            <span class="story-label">THE PROBLEM</span>
+            <p>An aggregate support SLA miss did not show which process step was failing or how breaches affected customer satisfaction (CSAT).</p>
+          </article>
+          <article class="story-card">
+            <span class="story-label">MY APPROACH</span>
+            <p>Analyzed 1,000 ticket logs; calculated breach rates and average handling times by category; and performed Pareto analysis to find the main driver.</p>
+          </article>
+          <article class="story-card">
+            <span class="story-label">KEY RESULT</span>
+            <p>Identified 'Delivery Issue' tickets as the bottleneck (40.7% breach rate) and quantified a 2.54 CSAT rating drop associated with breaches.</p>
+          </article>
+        </div>
+
+        <div class="metric-row">
+          <article class="metric"><span>SLA Compliance</span><strong>80.67%</strong><small>below the 90% target</small></article>
+          <article class="metric warning"><span>Delivery Breach Rate</span><strong>40.7%</strong><small>highest-risk category</small></article>
+          <article class="metric"><span>Delivery AHT</span><strong>71.33h</strong><small>vs 72h SLA target</small></article>
+          <article class="metric warning"><span>CSAT Drop</span><strong>-2.54</strong><small>3.98 SLA met vs 1.44 breach</small></article>
+        </div>
+
+        <div class="charts-gallery">
+          <article class="visual-card">
+            <h4>SLA Breaches by Category (Pareto)</h4>
+            <img src="assets/pareto_sla_breaches.png" alt="SLA Breaches Pareto Chart" class="project-chart">
+          </article>
+          <article class="visual-card">
+            <h4>CSAT Comparison: SLA Met vs. Breached</h4>
+            <img src="assets/csat_comparison.png" alt="CSAT Comparison Chart" class="project-chart">
+          </article>
+          <article class="visual-card">
+            <h4>Ticket Volume &amp; SLA Status over Time</h4>
+            <img src="assets/ticket_status_volume.png" alt="Ticket Volume and SLA Performance" class="project-chart">
+          </article>
+        </div>
+      </div>
+
+      <!-- CASE STUDY 3 -->
+      <div class="case-study" id="case-ab">
+        <div class="case-heading">
+          <div>
+            <p class="case-number">CASE STUDY 03</p>
+            <h3>Checkout Conversion A/B Test</h3>
+          </div>
+          <div class="tool-tags">
+            <span>Python</span><span>Stats</span><span>A/B Testing</span>
+            <a class="github-project-link" href="https://github.com/pavan55vkumar-afk/Enterprise-Analytics-Portfolio/tree/main/project_3_product_ab_test" target="_blank" rel="noopener" id="github-link-p3">View on GitHub ↗</a>
+          </div>
+        </div>
+
+        <div class="story-grid">
+          <article class="story-card">
+            <span class="story-label">THE PROBLEM</span>
+            <p>The product team wanted to deploy a new checkout flow but needed statistical evidence that the conversion lift was not random noise.</p>
+          </article>
+          <article class="story-card">
+            <span class="story-label">MY APPROACH</span>
+            <p>Analyzed 5,000 experiment users and built a two-proportion Z-test engine from scratch, computing critical stats and confidence intervals.</p>
+          </article>
+          <article class="story-card">
+            <span class="story-label">KEY RESULT</span>
+            <p>Found a statistically significant conversion lift (+2.39% absolute, p = 0.01188), supporting a rollout recommendation with device safeguards.</p>
+          </article>
+        </div>
+
+        <div class="experiment-panel">
+          <article class="variant control">
+            <span>CONTROL</span>
+            <strong>11.74%</strong>
+            <small>293 conversions / 2,495 users</small>
+          </article>
+          <div class="lift">
+            <span>RELATIVE LIFT</span>
+            <strong>+20.35%</strong>
+            <small>+2.39 percentage points</small>
+          </div>
+          <article class="variant winner">
+            <span>VARIANT</span>
+            <strong>14.13%</strong>
+            <small>354 conversions / 2,505 users</small>
+            <b>RECOMMENDED</b>
+          </article>
+        </div>
+
+        <div class="stat-grid">
+          <article><span>Z-statistic</span><strong>2.5157</strong></article>
+          <article><span>P-value</span><strong>0.01188</strong></article>
+          <article><span>Significance level</span><strong>0.05</strong></article>
+          <article class="success"><span>Decision</span><strong>Statistically significant</strong></article>
+        </div>
+
+        <div class="charts-gallery">
+          <article class="visual-card">
+            <h4>Conversion Rates with 95% Confidence Intervals</h4>
+            <img src="assets/conversion_rate_comparison.png" alt="Conversion Rate Comparison Chart" class="project-chart">
+          </article>
+          <article class="visual-card">
+            <h4>Z-Statistic vs. Rejection Regions</h4>
+            <img src="assets/normal_distribution_hypothesis.png" alt="Hypothesis Testing Standard Normal Curve" class="project-chart">
+          </article>
+        </div>
+      </div>
+
+      <!-- CASE STUDY 4 -->
+      <div class="case-study" id="case-dq">
+        <div class="case-heading">
+          <div>
+            <p class="case-number">CASE STUDY 04</p>
+            <h3>Data Quality Audit &amp; Profiling</h3>
+          </div>
+          <div class="tool-tags">
+            <span>Python</span><span>Pandas</span><span>Data Quality</span>
+            <a class="github-project-link" href="https://github.com/pavan55vkumar-afk/Enterprise-Analytics-Portfolio/tree/main/project_4_data_quality" target="_blank" rel="noopener" id="github-link-p4">View on GitHub ↗</a>
+          </div>
+        </div>
+
+        <div class="story-grid">
+          <article class="story-card">
+            <span class="story-label">THE PROBLEM</span>
+            <p>Unreliable records in billing systems eroded report trust. Data validation was needed to discover completeness and formatting errors.</p>
+          </article>
+          <article class="story-card">
+            <span class="story-label">MY APPROACH</span>
+            <p>Profiled 1,025 logs across completeness, uniqueness, and validity dimensions; detected transaction outliers; and mapped anomalies.</p>
+          </article>
+          <article class="story-card">
+            <span class="story-label">KEY RESULT</span>
+            <p>Quantified anomalies (42 missing emails, 25 duplicate rows, 74 payment casing errors) and built a database-integrity control blueprint.</p>
+          </article>
+        </div>
+
+        <div class="metric-row">
+          <article class="metric"><span>Audited Logs</span><strong>1,025</strong><small>total checked records</small></article>
+          <article class="metric warning"><span>Missing Emails</span><strong>42</strong><small>95.90% completeness</small></article>
+          <article class="metric"><span>Duplicate Rows</span><strong>25</strong><small>97.56% key uniqueness</small></article>
+          <article class="metric warning"><span>Format Errors</span><strong>74</strong><small>payment method casing issues</small></article>
+        </div>
+
+        <div class="charts-gallery">
+          <article class="visual-card">
+            <h4>Data Quality Profile Heatmap</h4>
+            <img src="assets/data_quality_heatmap.png" alt="Data Quality Profile Heatmap Chart" class="project-chart">
+          </article>
+          <article class="visual-card">
+            <h4>Data Issues Stacked Bar</h4>
+            <img src="assets/data_issues_stacked_bar.png" alt="Data Issues Stacked Bar Chart" class="project-chart">
+          </article>
+          <article class="visual-card">
+            <h4>Data Issues Donut Chart</h4>
+            <img src="assets/issue_distribution_donut.png" alt="Data Issues Donut Chart" class="project-chart">
+          </article>
+        </div>
+      </div>
+    </section>
+
+    <!-- CONTACT SECTION -->
+    <section class="contact-section" id="contact">
+      <h2>Contact</h2>
+      <div class="contact-details">
+        <p>Feel free to reach out via email or connect with me on LinkedIn and GitHub.</p>
+        <ul>
+          <li><strong>Email:</strong> <a href="mailto:pavan55vkumar@gmail.com">pavan55vkumar@gmail.com</a></li>
+          <li><strong>LinkedIn:</strong> <a href="https://www.linkedin.com/in/pavankumarv55/" target="_blank" rel="noopener">linkedin.com/in/pavankumarv55</a></li>
+          <li><strong>GitHub:</strong> <a href="https://github.com/pavan55vkumar-afk" target="_blank" rel="noopener">github.com/pavan55vkumar-afk</a></li>
+        </ul>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="footer-brand">Pavan Kumar</div>
+    <div class="footer-desc">Business Analytics · Reporting · Operational Intelligence</div>
+    <div class="footer-notice">All datasets shown are synthetic, self-generated for portfolio practice.</div>
+  </footer>
+</body>
+</html>
