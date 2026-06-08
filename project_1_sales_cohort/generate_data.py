@@ -4,6 +4,7 @@ import os
 from datetime import datetime, timedelta
 
 def generate_cohort_data():
+    random.seed(42)
     print("Generating synthetic e-commerce data for Project 1...")
     
     # Target dates: past 6 months

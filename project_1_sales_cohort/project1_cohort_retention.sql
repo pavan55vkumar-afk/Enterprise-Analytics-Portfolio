@@ -1,5 +1,5 @@
 -- ============================================================================
--- SQL Portfolio Project 1: Enterprise Sales & Customer Cohort Retention Analytics
+-- SQL Portfolio Project 1: B2B Sales & Customer Cohort Retention Analytics
 -- Tool Suitability: PostgreSQL, MySQL (8.0+), Snowflake, BigQuery
 -- Skills Demonstrated: Common Table Expressions (CTEs), Window Functions,
 --                      Date Wrangling, Cohort Analysis, RFM Customer Segmentation.
@@ -32,7 +32,7 @@ MonthlyGrowth AS (
     FROM MonthlySales
 )
 SELECT 
-    TO_CHAR(sales_month, 'YYYY-MM') AS month,
+    strftime(sales_month, '%Y-%m') AS month,
     net_revenue AS current_month_net_revenue,
     prev_month_revenue AS prior_month_net_revenue,
     -- MoM Growth Calculation
@@ -87,7 +87,7 @@ CohortSizes AS (
     GROUP BY 1
 )
 SELECT 
-    TO_CHAR(cs.cohort_month, 'YYYY-MM') AS cohort,
+    strftime(cs.cohort_month, '%Y-%m') AS cohort,
     cs.cohort_size,
     -- Period Retention Percentages
     ROUND(SUM(CASE WHEN cp.period_index = 0 THEN cp.active_customers ELSE 0 END) * 100.0 / cs.cohort_size, 1) AS period_0_pct,
@@ -126,11 +126,11 @@ RFMScores AS (
         frequency_count,
         monetary_value,
         -- Score 1 to 5 (5 is best, which means lower recency days)
-        NTILE(5) OVER (ORDER BY recency_days ASC) AS r_score,
+        NTILE(5) OVER (ORDER BY recency_days DESC) AS r_score,
         -- Score 1 to 5 (5 is best, higher frequency)
-        NTILE(5) OVER (ORDER BY frequency_count DESC) AS f_score,
+        NTILE(5) OVER (ORDER BY frequency_count ASC) AS f_score,
         -- Score 1 to 5 (5 is best, higher spend)
-        NTILE(5) OVER (ORDER BY monetary_value DESC) AS m_score
+        NTILE(5) OVER (ORDER BY monetary_value ASC) AS m_score
     FROM RawRFM
 ),
 RFMConcatenated AS (
