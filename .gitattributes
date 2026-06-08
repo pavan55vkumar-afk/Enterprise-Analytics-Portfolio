@@ -1,0 +1,8 @@
+# Portfolio showcase page — presentation only, not analytics work.
+# Mark as documentation so GitHub Linguist excludes them from the language bar.
+*.html linguist-documentation
+*.css linguist-documentation
+
+# Ensure SQL and Python are properly detected as project languages.
+*.sql linguist-detectable
+*.py linguist-detectable
