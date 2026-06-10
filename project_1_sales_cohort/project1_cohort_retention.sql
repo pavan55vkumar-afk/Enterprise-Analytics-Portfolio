@@ -1,6 +1,6 @@
 -- ============================================================================
 -- SQL Portfolio Project 1: B2B Sales & Customer Cohort Retention Analytics
--- Tool Suitability: PostgreSQL, MySQL (8.0+), Snowflake, BigQuery
+-- Tool : PostgreSQL, MySQL (8.0+), Snowflake, BigQuery
 -- Skills Demonstrated: Common Table Expressions (CTEs), Window Functions,
 --                      Date Wrangling, Cohort Analysis, RFM Customer Segmentation.
 -- ============================================================================
