@@ -19,11 +19,11 @@ an **observed analytical result** and an **expected business impact**.
 
 > The business needed to understand revenue movement, repeat purchasing, and
 > which customers should receive retention attention. I worked with customer and
-> order-level data containing 500 customers and 964 orders. I first validated
+> order-level data containing 500 customers and 929 orders. I first validated
 > customer keys, dates, order status, and transaction amounts. I then used SQL
 > CTEs and window functions to calculate monthly revenue growth, return rate,
-> cohort retention, and RFM scores. The data contained INR 5.18 million in
-> completed-order revenue. Of 392 purchasing customers, 259 made repeat
+> cohort retention, and RFM scores. The data contained INR 5.37 million in
+> completed-order revenue. Of 395 purchasing customers, 249 made repeat
 > purchases. The solution segments customers into groups such as champions,
 > active loyal customers, at-risk customers, and lost customers. My recommendation
 > was to use cohort trends to identify when engagement falls and run targeted
@@ -71,10 +71,10 @@ segments predict future purchases.
 > The operations team had an overall SLA problem but needed to know where the
 > failure was concentrated and what action to take. I analyzed 1,000 tickets
 > using volume, resolution status, handling time, SLA compliance, priority, and
-> CSAT. Overall SLA compliance was 79.4%. Delivery Issues were the primary
-> bottleneck, with a 49.7% breach rate and average handling time of 82.71 hours
-> against a 72-hour target. I also found that average CSAT dropped from 4.01 for
-> tickets completed within SLA to 1.34 for breached tickets. I proposed a
+> CSAT. Overall SLA compliance was 80.67%. Delivery Issues were the primary
+> bottleneck, with a 40.7% breach rate and average handling time of 71.33 hours
+> against a 72-hour target. I also found that average CSAT dropped from 3.98 for
+> tickets completed within SLA to 1.44 for breached tickets. I proposed a
 > milestone-based escalation at 50% of the SLA window, workflow redesign for
 > Delivery Issues, and a category-level dashboard so leadership could intervene
 > before tickets breached.
@@ -123,9 +123,9 @@ periods.
 > rolled out. I analyzed a simulated experiment with 5,000 users split between
 > control and variant groups. I calculated conversion rates, absolute and
 > relative lift, a two-proportion z-test, and statistical significance. Control
-> converted at 11.82%, while the variant converted at 14.75%, a 2.93
-> percentage-point absolute lift and 24.7% relative improvement. The p-value was
-> 0.00232, so the difference was unlikely to be random at the 5% significance
+> converted at 11.74%, while the variant converted at 14.13%, a 2.39
+> percentage-point absolute lift and 20.35% relative improvement. The p-value was
+> 0.01188, so the difference was unlikely to be random at the 5% significance
 > level. I recommended a controlled rollout rather than an immediate full
 > release, with device-level monitoring and revenue-per-visitor guardrails.
 
