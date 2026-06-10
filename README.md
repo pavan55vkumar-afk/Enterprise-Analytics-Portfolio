@@ -1,8 +1,14 @@
-# Business Analytics Portfolio
+# My Business Analytics Portfolio — Pavan Kumar Vaikutherisal
 
-This portfolio presents four analytics case studies across customer growth, service operations, product experimentation, and database quality. Each project starts with a business question and ends with a decision or recommendation for stakeholders.
+Hello! I am Pavan, and welcome to my analytics portfolio. 
 
-The datasets are synthetic and contain no confidential employer or client information. The business problems, KPI definitions, analysis approach, quality checks, interpretation, and recommendations were designed as realistic analytics engagements.
+Over the last three years working at Deloitte and MediaMint, I have spent countless hours inside transaction systems, CRM databases, and operations dashboards. I have felt the daily pressure of keeping SLAs green, the headache of manually cleaning messy customer data, and the challenge of proving campaign ROI to stakeholders. 
+
+I built this portfolio to bridge the gap between my operational experience and hands-on coding. Instead of sharing confidential company data, I generated realistic synthetic datasets from scratch and wrote the SQL and Python queries myself to solve the exact operational problems I face every day. 
+
+Each project below is a real challenge I wanted to tackle, showing how clean code can make business teams work smarter.
+
+---
 
 ## Projects
 
@@ -87,6 +93,3 @@ The datasets are synthetic and contain no confidential employer or client inform
 - Dashboard planning for Power BI and Tableau
 - Data quality, validation, and governance
 
-## Interview Guide
-
-See [INTERVIEW_GUIDE.md](./INTERVIEW_GUIDE.md) for concise explanations, follow-up questions, limitations, and evidence-based answers for each project.
