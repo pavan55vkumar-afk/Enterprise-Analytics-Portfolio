@@ -87,18 +87,3 @@ This chart segments the active customer base into actionable priority groups bas
 
 This project produced a reusable SQL framework that converts transactional data into customer lifecycle decisions. It does not claim that a campaign was implemented; the outcome is the analytical segmentation and decision framework.
 
-## How to Run
-
-1. Install the required dependencies:
-   ```bash
-   pip install -r ../requirements.txt
-   ```
-2. Generate the synthetic data:
-   ```bash
-   python3 generate_data.py
-   ```
-3. Run the SQL analysis and generate charts:
-   ```bash
-   python3 run_analysis.py
-   ```
-   This will output the summary tables to the terminal, save the query results as CSVs inside the `outputs/` folder, and save the charts inside the `assets/` folder.
