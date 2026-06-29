@@ -1,4 +1,28 @@
-# Customer Revenue, Retention, and RFM Analysis
+# 📊 Customer Revenue, Retention, and RFM Analysis
+
+[![SQL](https://img.shields.io/badge/SQL-DuckDB-blue?style=flat-square&logo=sqlite&logoColor=white)](project1_cohort_retention.sql)
+[![Python](https://img.shields.io/badge/Python-3.9-blue?style=flat-square&logo=python&logoColor=white)](run_analysis.py)
+[![Jupyter Notebook](https://img.shields.io/badge/Jupyter-Notebook-orange?style=flat-square&logo=jupyter&logoColor=white)](project1_cohort_rfm_analysis.ipynb)
+[![Status](https://img.shields.io/badge/Status-Complete-green?style=flat-square)](#)
+
+---
+
+## 📖 Project Overview & Notebook Link
+This project features an interactive **[Jupyter Notebook (project1_cohort_rfm_analysis.ipynb)](project1_cohort_rfm_analysis.ipynb)** showing the live execution, results, and visualizations. 
+
+### Data & Process Flow
+```mermaid
+graph TD
+    A[generate_data.py] -->|Synthetic E-commerce Data| B(customers.csv & orders.csv)
+    B -->|Loaded into| C[DuckDB In-Memory DB]
+    C -->|Executes SQL Queries| D[project1_cohort_retention.sql]
+    D -->|Query 1: Monthly Growth| E1[monthly_revenue_mom.csv]
+    D -->|Query 2: Cohort Retention| E2[cohort_retention.csv]
+    D -->|Query 3: RFM Segmentation| E3[rfm_segmentation.csv]
+    D -->|Matplotlib / Seaborn| F[assets/ charts & ipynb]
+```
+
+---
 
 ## Why I Built This Project (Personal Context)
 

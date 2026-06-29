@@ -1,4 +1,26 @@
-# Data Quality Audit & Profiling
+# 🧼 Data Quality Audit & Profiling
+
+[![Python](https://img.shields.io/badge/Python-3.9-blue?style=flat-square&logo=python&logoColor=white)](project4_data_quality_audit.py)
+[![Data Quality](https://img.shields.io/badge/Domain-Data%20Quality-blue?style=flat-square)](#)
+[![Jupyter Notebook](https://img.shields.io/badge/Jupyter-Notebook-orange?style=flat-square&logo=jupyter&logoColor=white)](project4_data_quality_audit.ipynb)
+[![Status](https://img.shields.io/badge/Status-Complete-green?style=flat-square)](#)
+
+---
+
+## 📖 Project Overview & Notebook Link
+This project features an interactive **[Jupyter Notebook (project4_data_quality_audit.ipynb)](project4_data_quality_audit.ipynb)** showing the live execution, results, and visualizations. 
+
+### Data & Process Flow
+```mermaid
+graph TD
+    A[project4_data_quality_audit.py] -->|Messy Simulated Data| B(billing_transactions_raw.csv)
+    B -->|Loaded into| C[Pandas Profiling Engine]
+    C -->|Completeness, Uniqueness, Validity| D[data_quality_scorecard.csv]
+    C -->|IQR Outlier Analysis| E[amount_outliers.csv]
+    C -->|Matplotlib / Seaborn| F[assets/ charts & ipynb]
+```
+
+---
 
 ## Why I Built This Project (Personal Context)
 

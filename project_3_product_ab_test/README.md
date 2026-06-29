@@ -1,4 +1,25 @@
-# Product Conversion Funnel A/B Testing
+# 🧪 Product Conversion Funnel A/B Testing
+
+[![Python](https://img.shields.io/badge/Python-3.9-blue?style=flat-square&logo=python&logoColor=white)](project3_ab_testing.py)
+[![A/B Testing](https://img.shields.io/badge/Method-A/B%20Testing-blue?style=flat-square)](#)
+[![Jupyter Notebook](https://img.shields.io/badge/Jupyter-Notebook-orange?style=flat-square&logo=jupyter&logoColor=white)](project3_checkout_ab_test.ipynb)
+[![Status](https://img.shields.io/badge/Status-Complete-green?style=flat-square)](#)
+
+---
+
+## 📖 Project Overview & Notebook Link
+This project features an interactive **[Jupyter Notebook (project3_checkout_ab_test.ipynb)](project3_checkout_ab_test.ipynb)** showing the live execution, results, and visualizations. 
+
+### Data & Process Flow
+```mermaid
+graph TD
+    A[project3_ab_testing.py] -->|Synthetic User Logs| B(ab_test_data.csv)
+    B -->|Loaded into| C[Pandas/Numpy Statistical Engine]
+    C -->|Calculates Z-statistic & P-value| D[ab_test_metrics.csv]
+    C -->|Matplotlib / Seaborn| E[assets/ charts & ipynb]
+```
+
+---
 
 ## Why I Built This Project (Personal Context)
 
