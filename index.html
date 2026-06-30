@@ -56,7 +56,7 @@
 
     <!-- PORTFOLIO SUMMARY STATS -->
     <section class="portfolio-summary" aria-label="Portfolio summary" id="portfolio-summary">
-      <article><strong>4</strong><span>Data Projects</span></article>
+      <article><strong>7</strong><span>Data Projects</span></article>
       <article><strong>8,454</strong><span>Records Analyzed</span></article>
       <article><strong>SQL · Python</strong><span>Languages Used</span></article>
       <article><strong>Power BI · Tableau · Excel</strong><span>Visualisation Tools</span></article>
@@ -325,6 +325,125 @@
             <h4>Data Issues Donut Chart</h4>
             <img src="assets/issue_distribution_donut.png" alt="Data Issues Donut Chart" class="project-chart">
           </article>
+        </div>
+      </div>
+
+      <!-- CASE STUDY 5 -->
+      <div class="case-study" id="case-dashboard">
+        <div class="case-heading">
+          <div>
+            <p class="case-number">CASE STUDY 05</p>
+            <h3>Interactive Enterprise Analytics Dashboard</h3>
+          </div>
+          <div class="tool-tags">
+            <span>Streamlit</span><span>Python</span><span>Plotly</span>
+            <a class="github-project-link" href="https://github.com/pavan55vkumar-afk/Enterprise-Analytics-Portfolio/tree/main/project_5_streamlit_dashboard" target="_blank" rel="noopener" id="github-link-p5">View on GitHub ↗</a>
+          </div>
+        </div>
+
+        <div class="story-grid">
+          <article class="story-card">
+            <span class="story-label">THE PROBLEM</span>
+            <p>Stakeholders needed an interactive way to explore dataset insights, filter customer cohorts, and simulate hypothesis test inputs in real-time, rather than viewing static reports.</p>
+          </article>
+          <article class="story-card">
+            <span class="story-label">MY APPROACH</span>
+            <p>Built a multi-page Streamlit web app in Python. Programmed side-bar filtering for regions and categories, created a z-hypothesis test simulator, and mapped outliers dynamically.</p>
+          </article>
+          <article class="story-card">
+            <span class="story-label">KEY RESULT</span>
+            <p>Consolidated all metrics (cohorts, SLA breach CSAT drops, Z-test rejection regions, and DQ audit results) into a unified, interactive analytical interface.</p>
+          </article>
+        </div>
+
+        <div class="metric-row">
+          <article class="metric"><span>Audited Records</span><strong>8,454</strong><small>across 4 case studies</small></article>
+          <article class="metric"><span>SLA Compliance</span><strong>80.7%</strong><small>-9.3% vs Target</small></article>
+          <article class="metric"><span>Simulated Users</span><strong>5,000</strong><small>checkout conversion logs</small></article>
+          <article class="metric"><span>Email Validity</span><strong>97.2%</strong><small>formatting accuracy score</small></article>
+        </div>
+
+        <div class="charts-gallery">
+          <article class="visual-card">
+            <h4>Interactive RFM Distribution</h4>
+            <img src="assets/rfm_distribution.png" alt="RFM Segment Distribution Chart" class="project-chart">
+          </article>
+          <article class="visual-card">
+            <h4>Live Z-Statistic Plotting</h4>
+            <img src="assets/normal_distribution_hypothesis.png" alt="Hypothesis Testing Standard Normal Curve" class="project-chart">
+          </article>
+        </div>
+      </div>
+
+      <!-- CASE STUDY 6 -->
+      <div class="case-study" id="case-etl">
+        <div class="case-heading">
+          <div>
+            <p class="case-number">CASE STUDY 06</p>
+            <h3>Data Warehouse Star Schema &amp; ETL Pipeline</h3>
+          </div>
+          <div class="tool-tags">
+            <span>Python</span><span>DuckDB</span><span>SQL</span>
+            <a class="github-project-link" href="https://github.com/pavan55vkumar-afk/Enterprise-Analytics-Portfolio/tree/main/project_6_etl_warehouse" target="_blank" rel="noopener" id="github-link-p6">View on GitHub ↗</a>
+          </div>
+        </div>
+
+        <div class="story-grid">
+          <article class="story-card">
+            <span class="story-label">THE PROBLEM</span>
+            <p>Querying raw transaction source tables directly resulted in slow runtimes, complex join logic, and potential exposure of non-standardized client fields.</p>
+          </article>
+          <article class="story-card">
+            <span class="story-label">MY APPROACH</span>
+            <p>Designed a Star Schema (Fact Sales and Customer, Product, Date dimensions) and wrote an automated Python ETL script to extract, clean, transform, and load CSV records into DuckDB.</p>
+          </article>
+          <article class="story-card">
+            <span class="story-label">KEY RESULT</span>
+            <p>Created a fast, structured DuckDB database (`analytics_warehouse.db`) that cleanly standardizes client data structures and accelerates analytical reporting queries.</p>
+          </article>
+        </div>
+
+        <div class="metric-row">
+          <article class="metric"><span>Fact Sales Rows</span><strong>887</strong><small>clean e-commerce orders</small></article>
+          <article class="metric"><span>Dim Customers</span><strong>395</strong><small>standardized records</small></article>
+          <article class="metric"><span>Dim Products</span><strong>5</strong><small>unique product entities</small></article>
+          <article class="metric"><span>Dim Date Rows</span><strong>365</strong><small>calendar dimension facts</small></article>
+        </div>
+      </div>
+
+      <!-- CASE STUDY 7 -->
+      <div class="case-study" id="case-report">
+        <div class="case-heading">
+          <div>
+            <p class="case-number">CASE STUDY 07</p>
+            <h3>Automated Executive PDF Compiler</h3>
+          </div>
+          <div class="tool-tags">
+            <span>Python</span><span>ReportLab</span><span>Automation</span>
+            <a class="github-project-link" href="https://github.com/pavan55vkumar-afk/Enterprise-Analytics-Portfolio/tree/main/project_7_automated_reporting" target="_blank" rel="noopener" id="github-link-p7">View on GitHub ↗</a>
+          </div>
+        </div>
+
+        <div class="story-grid">
+          <article class="story-card">
+            <span class="story-label">THE PROBLEM</span>
+            <p>Manually compiling performance data, tables, and visualization charts into executive reports is slow, repetitive, and prone to copy-paste errors.</p>
+          </article>
+          <article class="story-card">
+            <span class="story-label">MY APPROACH</span>
+            <p>Wrote a Python script utilizing ReportLab SimpleDocTemplate to dynamically pull CSV metrics and root assets, building a professional multi-page print layout.</p>
+          </article>
+          <article class="story-card">
+            <span class="story-label">KEY RESULT</span>
+            <p>Automated the generation of a clean, executive-ready 3-page PDF report (`Executive_Performance_Report.pdf`) featuring embedded tables and high-res charts.</p>
+          </article>
+        </div>
+
+        <div class="metric-row">
+          <article class="metric"><span>Report Pages</span><strong>3</strong><small>clean multi-page format</small></article>
+          <article class="metric"><span>Charts Embedded</span><strong>3</strong><small>high-res visualization figures</small></article>
+          <article class="metric"><span>Tables Rendered</span><strong>1</strong><small>customer cohort KPI tables</small></article>
+          <article class="metric"><span>Compile Time</span><strong>&lt; 1.0s</strong><small>100% automated script run</small></article>
         </div>
       </div>
     </section>

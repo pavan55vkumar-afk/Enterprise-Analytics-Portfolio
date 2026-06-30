@@ -84,6 +84,52 @@ Each project below is a real challenge I wanted to tackle, showing how clean cod
 
 [View project case study](./project_4_data_quality/README.md)
 
+### 5. Interactive Enterprise Analytics Dashboard
+
+**Business question:** How can we allow stakeholders to dynamically explore operational metrics, filter retention cohorts, and simulate experiment parameters in real-time?
+
+**What I delivered:** A multi-page Streamlit web app in Python that integrates data models and simulation rules across all analytical case studies.
+
+**Dataset:** Integrates datasets from all 4 previous case studies (totaling 8,454 records).
+
+**Selected findings:**
+- Interactive region/category sidebar selectors that dynamically recalculate sales aggregates and RFM segments.
+- Support ticket queue filters that compute SLA compliance and plot CSAT rating drops.
+- Conversion z-test simulators with adjustable rates and size inputs, rendering normal distributions on the fly.
+- Outlier detection models that flag billing transaction amount anomalies.
+
+[View project case study](./project_5_streamlit_dashboard/README.md)
+
+### 6. Data Warehouse Star Schema & ETL Pipeline
+
+**Business question:** How do we transform normalized, inconsistent transaction tables into a clean, unified schema that minimizes join complexity and reduces analytical report latency?
+
+**What I delivered:** A designed dimensional Star Schema (1 Fact and 3 Dimension tables) and a Python ETL pipeline that cleans data and loads it into a DuckDB database.
+
+**Dataset:** 887 completed orders and 395 customer entities.
+
+**Selected findings:**
+- Cleaned and title-cased names, lowercased emails, and normalized region/payment methods.
+- Created pre-calculated calendar metrics (quarters, months, weekend flags) in a `dim_date` dimension.
+- Achieved fast aggregate analytics queries by joining surrogate keys rather than raw IDs.
+
+[View project case study](./project_6_etl_warehouse/README.md)
+
+### 7. Automated Executive PDF Compiler
+
+**Business question:** How can we automate the compilation of e-commerce metrics, charts, and recommendations into print-ready, executive-style PDF updates?
+
+**What I delivered:** An automated Python script using the ReportLab library to build a multi-page document structure, dynamically rendering performance tables and charts.
+
+**Dataset:** Outputs from the cohort database, SLA logs, and conversion tests.
+
+**Selected findings:**
+- Compiled a professional 3-page executive performance report.
+- Embedded high-res charts (monthly growth line, SLA breach Pareto bar, and A/B test normal curve) and formatted metrics.
+- Generated the entire report in under 1 second, removing manual report compilation work.
+
+[View project case study](./project_7_automated_reporting/README.md)
+
 ## Skills Demonstrated
 
 - Business problem framing and KPI definition
