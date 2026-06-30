@@ -84,14 +84,3 @@ This stacked bar chart shows the monthly volume of tickets received, broken down
 
 This analysis narrowed a general operational compliance issue to a single bottleneck workflow and quantified the CSAT risk of SLA breaches, supporting an action plan.
 
-## How to Run
-
-1. Install the required dependencies:
-   ```bash
-   pip install -r ../requirements.txt
-   ```
-2. Generate the synthetic data, run the analysis, and save charts:
-   ```bash
-   python3 project2_rca_simulation.py
-   ```
-   This will output the operational metrics report to the terminal, save the summary tables as CSVs in the `outputs/` folder, and save the charts as PNGs in the `assets/` folder.
