@@ -55,7 +55,7 @@
 
     <!-- PORTFOLIO SUMMARY STATS -->
     <section class="portfolio-summary" aria-label="Portfolio summary" id="portfolio-summary">
-      <article><strong>7</strong><span>Data Projects</span></article>
+      <article><strong>3</strong><span>Data Projects</span></article>
       <article><strong>8,454</strong><span>Records Analyzed</span></article>
       <article><strong>SQL · Python</strong><span>Languages Used</span></article>
       <article><strong>Power BI · Tableau · Excel</strong><span>Visualisation Tools</span></article>
@@ -113,10 +113,10 @@
         <div class="case-heading">
           <div>
             <p class="case-number">CASE STUDY 01</p>
-            <h3>Customer Revenue, Retention, and RFM Analysis</h3>
+            <h3>LLM-Powered Customer RFM &amp; Cohort Copywriter</h3>
           </div>
           <div class="tool-tags">
-            <span>SQL</span><span>DuckDB</span><span>Cohorts</span>
+            <span>SQL</span><span>DuckDB</span><span>Claude API</span>
             <a class="github-project-link" href="https://github.com/pavan55vkumar-afk/Enterprise-Analytics-Portfolio/tree/main/project_1_sales_cohort" target="_blank" rel="noopener" id="github-link-p1">View on GitHub ↗</a>
           </div>
         </div>
@@ -124,15 +124,15 @@
         <div class="story-grid">
           <article class="story-card">
             <span class="story-label">THE PROBLEM</span>
-            <p>Overall revenue numbers did not show customer quality. Leadership needed to understand which cohorts return and where drop-offs happen.</p>
+            <p>Marketing teams struggle to write personalized campaigns for distinct customer cohorts, wasting budget on broad, generic outreach.</p>
           </article>
           <article class="story-card">
             <span class="story-label">MY APPROACH</span>
-            <p>Calculated monthly growth via SQL CTEs; assigned customers to acquisition cohorts; and scored customer recency, frequency, and monetary value using window NTILE functions.</p>
+            <p>Wrote SQL CTEs and NTILE functions to segment 500 customers into RFM cohorts, and integrated the Claude API to automatically draft targeted email copies based on cohort purchase histories.</p>
           </article>
           <article class="story-card">
             <span class="story-label">KEY RESULT</span>
-            <p>Segmented the customer base into actionable priority groups (like Champions and At-Risk), revealing specific drop-off points after signup month.</p>
+            <p>Built an end-to-end copywriting console that writes highly specific marketing incentives in under 2 seconds, eliminating manual copywriting.</p>
           </article>
         </div>
 
@@ -164,10 +164,10 @@
         <div class="case-heading">
           <div>
             <p class="case-number">CASE STUDY 02</p>
-            <h3>Operational SLA Bottleneck Analysis</h3>
+            <h3>AI-Powered SLA Incident Warning &amp; Response System</h3>
           </div>
           <div class="tool-tags">
-            <span>Python</span><span>Pandas</span><span>RCA</span>
+            <span>Python</span><span>Claude API</span><span>SLA Alerts</span>
             <a class="github-project-link" href="https://github.com/pavan55vkumar-afk/Enterprise-Analytics-Portfolio/tree/main/project_2_operations_rca" target="_blank" rel="noopener" id="github-link-p2">View on GitHub ↗</a>
           </div>
         </div>
@@ -175,15 +175,15 @@
         <div class="story-grid">
           <article class="story-card">
             <span class="story-label">THE PROBLEM</span>
-            <p>An aggregate support SLA miss did not show which process step was failing or how breaches affected customer satisfaction (CSAT).</p>
+            <p>Support teams react to SLA breaches after they happen, leading to customer frustration and a 2.54-point crash in CSAT scores.</p>
           </article>
           <article class="story-card">
             <span class="story-label">MY APPROACH</span>
-            <p>Analyzed 1,000 ticket logs; calculated breach rates and average handling times by category; and performed Pareto analysis to find the main driver.</p>
+            <p>Programmed a Python poller that flags tickets hitting a 75% elapsed SLA limit, gathers customer profile history, and calls the Claude API to generate a personalized, empathetic status update.</p>
           </article>
           <article class="story-card">
             <span class="story-label">KEY RESULT</span>
-            <p>Identified 'Delivery Issue' tickets as the bottleneck (40.7% breach rate) and quantified a 2.54 CSAT rating drop associated with breaches.</p>
+            <p>Created a supervisor dashboard that drafts context-aware delay notifications in under 2 seconds, protecting customer relations proactively.</p>
           </article>
         </div>
 
@@ -211,76 +211,10 @@
       </div>
 
       <!-- CASE STUDY 3 -->
-      <div class="case-study" id="case-ab">
-        <div class="case-heading">
-          <div>
-            <p class="case-number">CASE STUDY 03</p>
-            <h3>Checkout Conversion A/B Test</h3>
-          </div>
-          <div class="tool-tags">
-            <span>Python</span><span>Stats</span><span>A/B Testing</span>
-            <a class="github-project-link" href="https://github.com/pavan55vkumar-afk/Enterprise-Analytics-Portfolio/tree/main/project_3_product_ab_test" target="_blank" rel="noopener" id="github-link-p3">View on GitHub ↗</a>
-          </div>
-        </div>
-
-        <div class="story-grid">
-          <article class="story-card">
-            <span class="story-label">THE PROBLEM</span>
-            <p>The product team wanted to deploy a new checkout flow but needed statistical evidence that the conversion lift was not random noise.</p>
-          </article>
-          <article class="story-card">
-            <span class="story-label">MY APPROACH</span>
-            <p>Analyzed 5,000 experiment users and built a two-proportion Z-test engine from scratch, computing critical stats and confidence intervals.</p>
-          </article>
-          <article class="story-card">
-            <span class="story-label">KEY RESULT</span>
-            <p>Found a statistically significant conversion lift (+2.39% absolute, p = 0.01188), supporting a rollout recommendation with device safeguards.</p>
-          </article>
-        </div>
-
-        <div class="experiment-panel">
-          <article class="variant control">
-            <span>CONTROL</span>
-            <strong>11.74%</strong>
-            <small>293 conversions / 2,495 users</small>
-          </article>
-          <div class="lift">
-            <span>RELATIVE LIFT</span>
-            <strong>+20.35%</strong>
-            <small>+2.39 percentage points</small>
-          </div>
-          <article class="variant winner">
-            <span>VARIANT</span>
-            <strong>14.13%</strong>
-            <small>354 conversions / 2,505 users</small>
-            <b>RECOMMENDED</b>
-          </article>
-        </div>
-
-        <div class="stat-grid">
-          <article><span>Z-statistic</span><strong>2.5157</strong></article>
-          <article><span>P-value</span><strong>0.01188</strong></article>
-          <article><span>Significance level</span><strong>0.05</strong></article>
-          <article class="success"><span>Decision</span><strong>Statistically significant</strong></article>
-        </div>
-
-        <div class="charts-gallery">
-          <article class="visual-card">
-            <h4>Conversion Rates with 95% Confidence Intervals</h4>
-            <img src="assets/conversion_rate_comparison.png" alt="Conversion Rate Comparison Chart" class="project-chart">
-          </article>
-          <article class="visual-card">
-            <h4>Z-Statistic vs. Rejection Regions</h4>
-            <img src="assets/normal_distribution_hypothesis.png" alt="Hypothesis Testing Standard Normal Curve" class="project-chart">
-          </article>
-        </div>
-      </div>
-
-      <!-- CASE STUDY 4 -->
       <div class="case-study" id="case-dq">
         <div class="case-heading">
           <div>
-            <p class="case-number">CASE STUDY 04</p>
+            <p class="case-number">CASE STUDY 03</p>
             <h3>Data Quality Audit &amp; Profiling</h3>
           </div>
           <div class="tool-tags">
@@ -324,125 +258,6 @@
             <h4>Data Issues Donut Chart</h4>
             <img src="assets/issue_distribution_donut.png" alt="Data Issues Donut Chart" class="project-chart">
           </article>
-        </div>
-      </div>
-
-      <!-- CASE STUDY 5 -->
-      <div class="case-study" id="case-dashboard">
-        <div class="case-heading">
-          <div>
-            <p class="case-number">CASE STUDY 05</p>
-            <h3>Interactive Enterprise Analytics Dashboard</h3>
-          </div>
-          <div class="tool-tags">
-            <span>Streamlit</span><span>Python</span><span>Plotly</span>
-            <a class="github-project-link" href="https://github.com/pavan55vkumar-afk/Enterprise-Analytics-Portfolio/tree/main/project_5_streamlit_dashboard" target="_blank" rel="noopener" id="github-link-p5">View on GitHub ↗</a>
-          </div>
-        </div>
-
-        <div class="story-grid">
-          <article class="story-card">
-            <span class="story-label">THE PROBLEM</span>
-            <p>Stakeholders needed an interactive way to explore dataset insights, filter customer cohorts, and simulate hypothesis test inputs in real-time, rather than viewing static reports.</p>
-          </article>
-          <article class="story-card">
-            <span class="story-label">MY APPROACH</span>
-            <p>Built a multi-page Streamlit web app in Python. Programmed side-bar filtering for regions and categories, created a z-hypothesis test simulator, and mapped outliers dynamically.</p>
-          </article>
-          <article class="story-card">
-            <span class="story-label">KEY RESULT</span>
-            <p>Consolidated all metrics (cohorts, SLA breach CSAT drops, Z-test rejection regions, and DQ audit results) into a unified, interactive analytical interface.</p>
-          </article>
-        </div>
-
-        <div class="metric-row">
-          <article class="metric"><span>Audited Records</span><strong>8,454</strong><small>across 4 case studies</small></article>
-          <article class="metric"><span>SLA Compliance</span><strong>80.7%</strong><small>-9.3% vs Target</small></article>
-          <article class="metric"><span>Simulated Users</span><strong>5,000</strong><small>checkout conversion logs</small></article>
-          <article class="metric"><span>Email Validity</span><strong>97.2%</strong><small>formatting accuracy score</small></article>
-        </div>
-
-        <div class="charts-gallery">
-          <article class="visual-card">
-            <h4>Interactive RFM Distribution</h4>
-            <img src="assets/rfm_distribution.png" alt="RFM Segment Distribution Chart" class="project-chart">
-          </article>
-          <article class="visual-card">
-            <h4>Live Z-Statistic Plotting</h4>
-            <img src="assets/normal_distribution_hypothesis.png" alt="Hypothesis Testing Standard Normal Curve" class="project-chart">
-          </article>
-        </div>
-      </div>
-
-      <!-- CASE STUDY 6 -->
-      <div class="case-study" id="case-etl">
-        <div class="case-heading">
-          <div>
-            <p class="case-number">CASE STUDY 06</p>
-            <h3>Data Warehouse Star Schema &amp; ETL Pipeline</h3>
-          </div>
-          <div class="tool-tags">
-            <span>Python</span><span>DuckDB</span><span>SQL</span>
-            <a class="github-project-link" href="https://github.com/pavan55vkumar-afk/Enterprise-Analytics-Portfolio/tree/main/project_6_etl_warehouse" target="_blank" rel="noopener" id="github-link-p6">View on GitHub ↗</a>
-          </div>
-        </div>
-
-        <div class="story-grid">
-          <article class="story-card">
-            <span class="story-label">THE PROBLEM</span>
-            <p>Querying raw transaction source tables directly resulted in slow runtimes, complex join logic, and potential exposure of non-standardized client fields.</p>
-          </article>
-          <article class="story-card">
-            <span class="story-label">MY APPROACH</span>
-            <p>Designed a Star Schema (Fact Sales and Customer, Product, Date dimensions) and wrote an automated Python ETL script to extract, clean, transform, and load CSV records into DuckDB.</p>
-          </article>
-          <article class="story-card">
-            <span class="story-label">KEY RESULT</span>
-            <p>Created a fast, structured DuckDB database (`analytics_warehouse.db`) that cleanly standardizes client data structures and accelerates analytical reporting queries.</p>
-          </article>
-        </div>
-
-        <div class="metric-row">
-          <article class="metric"><span>Fact Sales Rows</span><strong>887</strong><small>clean e-commerce orders</small></article>
-          <article class="metric"><span>Dim Customers</span><strong>395</strong><small>standardized records</small></article>
-          <article class="metric"><span>Dim Products</span><strong>5</strong><small>unique product entities</small></article>
-          <article class="metric"><span>Dim Date Rows</span><strong>365</strong><small>calendar dimension facts</small></article>
-        </div>
-      </div>
-
-      <!-- CASE STUDY 7 -->
-      <div class="case-study" id="case-report">
-        <div class="case-heading">
-          <div>
-            <p class="case-number">CASE STUDY 07</p>
-            <h3>Automated Executive PDF Compiler</h3>
-          </div>
-          <div class="tool-tags">
-            <span>Python</span><span>ReportLab</span><span>Automation</span>
-            <a class="github-project-link" href="https://github.com/pavan55vkumar-afk/Enterprise-Analytics-Portfolio/tree/main/project_7_automated_reporting" target="_blank" rel="noopener" id="github-link-p7">View on GitHub ↗</a>
-          </div>
-        </div>
-
-        <div class="story-grid">
-          <article class="story-card">
-            <span class="story-label">THE PROBLEM</span>
-            <p>Manually compiling performance data, tables, and visualization charts into executive reports is slow, repetitive, and prone to copy-paste errors.</p>
-          </article>
-          <article class="story-card">
-            <span class="story-label">MY APPROACH</span>
-            <p>Wrote a Python script utilizing ReportLab SimpleDocTemplate to dynamically pull CSV metrics and root assets, building a professional multi-page print layout.</p>
-          </article>
-          <article class="story-card">
-            <span class="story-label">KEY RESULT</span>
-            <p>Automated the generation of a clean, executive-ready 3-page PDF report (`Executive_Performance_Report.pdf`) featuring embedded tables and high-res charts.</p>
-          </article>
-        </div>
-
-        <div class="metric-row">
-          <article class="metric"><span>Report Pages</span><strong>3</strong><small>clean multi-page format</small></article>
-          <article class="metric"><span>Charts Embedded</span><strong>3</strong><small>high-res visualization figures</small></article>
-          <article class="metric"><span>Tables Rendered</span><strong>1</strong><small>customer cohort KPI tables</small></article>
-          <article class="metric"><span>Compile Time</span><strong>&lt; 1.0s</strong><small>100% automated script run</small></article>
         </div>
       </div>
     </section>
