@@ -42,31 +42,29 @@ Each project below is a real challenge I wanted to tackle, showing how clean cod
 
 [View project case study](./project_2_operations_rca/README.md)
 
-### 3. Data Quality Audit & Profiling
+### 3. AI Job-Search & Resume-Tailoring Agent
 
-**Business question:** Which fields in our billing transactions suffer from completeness issues, what is the duplicate rate of our transactions, and what data governance steps should we implement?
+**Business question:** How can we automate personalized resume tailoring for high-volume applications while maintaining 100% truthfulness and zero fabrication?
 
-**What I delivered:** Python data-quality audit covering completeness (% non-null), uniqueness (% unique keys), and validity (% conforming to format rules) metrics, and transaction outlier checks.
+**What I delivered:** A Python prompt pipeline and CLI tool using the Claude API that extracts job description keywords and matches them to verified master experience profiles using strict constraints.
 
-**Dataset:** 1,025 synthetic billing transaction logs.
+**Dataset:** Personal master experience logs and sample target job descriptions.
 
-**Selected findings:**
-- Email completeness was 95.90% with a 97.17% validity rate (42 missing, 29 invalid emails).
-- Amount completeness was 97.56% with a 97.46% validity rate (25 missing, 26 negative or extreme outliers).
-- Payment method validity rate was 92.78% due to casing/label inconsistency (74 records).
-- Unique Transactions: 1,000 (25 duplicate rows detected).
+**Selected capabilities & findings:**
+- Developed an anti-fabrication prompt system that restricts Claude from generating any unverified experiences.
+- Configured a low-temperature (0.2) LLM generation to ensure deterministic, fact-grounded outputs.
+- Reduced manual tailoring time from 45 minutes to under 10 seconds per application.
 
-**Decision supported:** Enforce database constraints (NOT NULL, UNIQUE keys), restrict UI inputs using drop-downs, and audit statistical amount outliers monthly.
-
-[View project case study](./project_4_data_quality/README.md)
+[View project case study](./project_3_job_agent/README.md)
 
 ## Skills Demonstrated
 
 - Business problem framing and KPI definition
 - SQL using CTEs, window functions, cohort analysis, and RFM segmentation
-- Python-based analysis, data profiling, and statistical testing
+- Python-based analysis, scripting, and CLI application development
 - Claude LLM API integration and structured prompt engineering
 - SLA/TAT monitoring and proactive incident automation
-- Data quality, validation, and governance
+- Local automation scripting and anti-fabrication pipeline design
+
 
 
