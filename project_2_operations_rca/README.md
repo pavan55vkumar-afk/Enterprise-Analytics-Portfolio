@@ -84,3 +84,24 @@ This stacked bar chart shows the monthly volume of tickets received, broken down
 
 This analysis narrowed a general operational compliance issue to a single bottleneck workflow and quantified the CSAT risk of SLA breaches, supporting an action plan.
 
+## Turning the analysis into a working tool
+
+The notebook above tells you what already went wrong. I wanted to go a step further and build something that catches a ticket before it breaches, not after.
+
+`app.py` is a Streamlit dashboard that reads the same ticket data, flags anything running past 75% of its SLA window, and gives a support manager two things to do about it:
+
+1. **Send an immediate first response.** A fixed acknowledgment email goes out right away, no AI involved, just confirming the ticket was received and someone's on it.
+2. **Draft a resolution update with Gemini.** Once someone's actually worked the ticket, the app can generate a short status update using the ticket's real details (category, priority, how far past SLA it is). Nothing sends until a human reviews and approves it.
+
+I split it this way on purpose. The first response doesn't need judgment, it just needs to go out fast and consistently, so there's no reason to involve an LLM or a person. The follow-up update is where the actual case-specific reasoning matters, so that's where I put the AI and a human approval step.
+
+**To run it locally:**
+
+```
+pip install -r ../requirements.txt
+streamlit run app.py
+```
+
+You'll need a Gemini API key (free tier from Google AI Studio) pasted into the sidebar to generate resolution drafts. The ticket data regenerates automatically on first run if it isn't already present.
+```
+

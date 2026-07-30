@@ -1,0 +1,323 @@
+"""
+app.py -- SLA Incident Responder (Streamlit dashboard)
+
+WHAT THIS FILE DOES:
+1. Reads tickets.csv (support tickets database)
+2. Filters to at-risk tickets (75%+ SLA used)
+3. For each ticket: offers two actions:
+   a) Send first response (instant, fixed template, shows preview)
+   b) Generate AI-drafted resolution update (after human works the ticket)
+"""
+
+import streamlit as st
+import pandas as pd
+from google import genai
+from datetime import datetime
+
+FIRST_RESPONSE_TEMPLATE = """Hi there,
+
+Thank you for reaching out to us. We wanted to confirm that we've received your request and it's currently being worked on by our support team.
+
+We understand your time is valuable, and we're actively looking into this. Someone from our team will follow up with you as soon as there's an update.
+
+We appreciate your patience in the meantime.
+
+Thank you,
+Support Team"""
+
+st.set_page_config(page_title="SLA Incident Responder", layout="wide", page_icon="🚨")
+
+# --- light custom styling ---
+st.markdown("""
+<style>
+    .main > div { padding-top: 1.2rem; }
+    .ticket-card {
+        border-radius: 10px; padding: 12px 14px; margin-bottom: 8px;
+        border-left: 5px solid #ccc; background: #fafafa; cursor: pointer;
+    }
+    .badge {
+        display: inline-block; padding: 2px 9px; border-radius: 999px;
+        font-size: 11px; font-weight: 700; color: white; margin-left: 6px;
+    }
+    .badge-breached { background: #d32f2f; }
+    .badge-critical { background: #f57c00; }
+    .badge-watch { background: #fbc02d; color: #4a3b00; }
+    .kpi-box {
+        border-radius: 10px; padding: 14px 10px; text-align: center;
+        border: 1px solid #eee;
+    }
+</style>
+""", unsafe_allow_html=True)
+
+st.title("🚨 SLA Incident Responder")
+st.caption("Auto-send fixed first response + AI-drafted resolution updates")
+
+# --- session state ---
+if "selected_ticket_id" not in st.session_state:
+    st.session_state.selected_ticket_id = None
+if "generated_draft" not in st.session_state:
+    st.session_state.generated_draft = None
+if "approval_history" not in st.session_state:
+    st.session_state.approval_history = []
+if "first_response_sent" not in st.session_state:
+    st.session_state.first_response_sent = set()
+if "show_first_response_preview" not in st.session_state:
+    st.session_state.show_first_response_preview = {}
+
+# --- STEP 1: read the database (generate it first if it doesn't exist yet) ---
+def generate_tickets_if_missing():
+    import os
+    if os.path.exists("tickets.csv"):
+        return
+    import numpy as np
+    from datetime import timedelta
+    import random
+
+    np.random.seed(42)
+    random.seed(42)
+    num_tickets = 1000
+
+    ticket_ids = [f"TKT-{i+1:05d}" for i in range(num_tickets)]
+    priorities = np.random.choice(['Low', 'Medium', 'High'], num_tickets, p=[0.3, 0.5, 0.2])
+    categories = np.random.choice(
+        ['Billing', 'Technical Support', 'Account Access', 'Delivery Issue'],
+        num_tickets, p=[0.3, 0.3, 0.2, 0.2]
+    )
+    sla_map = {
+        ('Billing', 'High'): 12, ('Billing', 'Medium'): 24, ('Billing', 'Low'): 48,
+        ('Technical Support', 'High'): 8, ('Technical Support', 'Medium'): 24, ('Technical Support', 'Low'): 48,
+        ('Account Access', 'High'): 4, ('Account Access', 'Medium'): 12, ('Account Access', 'Low'): 24,
+        ('Delivery Issue', 'High'): 24, ('Delivery Issue', 'Medium'): 48, ('Delivery Issue', 'Low'): 72,
+    }
+    sla_limits = [sla_map.get((cat, pri), 24) for cat, pri in zip(categories, priorities)]
+
+    now = datetime.now()
+    created_ats = [now - timedelta(hours=random.randint(1, 120)) for _ in range(num_tickets)]
+    statuses = np.random.choice(['Open', 'In Progress', 'Resolved'], num_tickets, p=[0.3, 0.4, 0.3])
+    elapsed_hours = [round(random.uniform(0, sla_limits[i] * 1.5), 1) for i in range(num_tickets)]
+
+    resolved_ats = []
+    for i, status in enumerate(statuses):
+        if status == 'Resolved':
+            resolved_ats.append((created_ats[i] + timedelta(hours=elapsed_hours[i])).strftime('%Y-%m-%d %H:%M:%S'))
+        else:
+            resolved_ats.append(None)
+
+    sla_breaches = [1 if elapsed_hours[i] > sla_limits[i] else 0 for i in range(num_tickets)]
+    csat_scores = [round(random.uniform(1.0, 5.0), 1) if s == 'Resolved' else None for s in statuses]
+
+    out = pd.DataFrame({
+        'ticket_id': ticket_ids,
+        'created_at': [dt.strftime('%Y-%m-%d %H:%M:%S') for dt in created_ats],
+        'resolved_at': resolved_ats,
+        'status': statuses,
+        'priority': priorities,
+        'category': categories,
+        'sla_limit_hours': sla_limits,
+        'elapsed_hours': elapsed_hours,
+        'sla_breach': sla_breaches,
+        'csat_score': csat_scores,
+    })
+    out.to_csv("tickets.csv", index=False)
+
+
+@st.cache_data
+def load_tickets():
+    generate_tickets_if_missing()
+    df = pd.read_csv("tickets.csv")
+    df["sla_percent"] = (df["elapsed_hours"] / df["sla_limit_hours"] * 100).round(1)
+    return df
+
+df = load_tickets()
+
+# --- sidebar controls ---
+with st.sidebar:
+    st.header("⚙️ Settings")
+    api_key = st.text_input("Gemini API Key", type="password")
+    model_choice = st.selectbox(
+        "Model",
+        ["gemini-2.0-flash", "gemini-2.0-flash-lite", "gemini-flash-latest"],
+        index=2,
+    )
+    temperature = st.slider("Temperature", 0.0, 1.0, 0.3, 0.1)
+    max_tokens = st.slider("Max tokens", 100, 500, 350, 50)
+    threshold = st.slider("SLA warning threshold (%)", 50, 100, 75)
+
+# --- STEP 2 & 3: filter to warning tickets ---
+warning_df = df[(df["sla_percent"] >= threshold) & (df["status"] != "Resolved")].copy()
+warning_df = warning_df.sort_values("sla_percent", ascending=False)
+breached_now = int((warning_df["sla_percent"] >= 100).sum())
+critical_now = int(((warning_df["sla_percent"] >= 90) & (warning_df["sla_percent"] < 100)).sum())
+compliance_rate = round(100 - (df["sla_breach"].sum() / len(df) * 100), 1)
+
+# --- KPI header ---
+k1, k2, k3, k4 = st.columns(4)
+with k1:
+    st.markdown(f"<div class='kpi-box'><h2 style='margin:0'>{len(df)}</h2>"
+                f"<span style='color:#666'>Total tickets</span></div>", unsafe_allow_html=True)
+with k2:
+    st.markdown(f"<div class='kpi-box' style='border-color:#fbc02d'><h2 style='margin:0;color:#b8860b'>{len(warning_df)}</h2>"
+                f"<span style='color:#666'>At risk (≥{threshold}% SLA)</span></div>", unsafe_allow_html=True)
+with k3:
+    st.markdown(f"<div class='kpi-box' style='border-color:#d32f2f'><h2 style='margin:0;color:#d32f2f'>{breached_now}</h2>"
+                f"<span style='color:#666'>Already breached</span></div>", unsafe_allow_html=True)
+with k4:
+    st.markdown(f"<div class='kpi-box' style='border-color:#2e7d32'><h2 style='margin:0;color:#2e7d32'>{compliance_rate}%</h2>"
+                f"<span style='color:#666'>Overall SLA compliance</span></div>", unsafe_allow_html=True)
+
+st.write("")
+col_list, col_detail = st.columns([1, 1.4])
+
+def severity(pct):
+    if pct >= 100:
+        return "#d32f2f", "🔴 BREACHED", "badge-breached"
+    elif pct >= 90:
+        return "#f57c00", "🟠 CRITICAL", "badge-critical"
+    else:
+        return "#fbc02d", "🟡 WATCH", "badge-watch"
+
+with col_list:
+    st.subheader("Tickets at risk")
+    st.caption(f"Sorted worst-first · {breached_now} breached · {critical_now} critical")
+
+    if warning_df.empty:
+        st.success("No tickets currently at risk. 🎉")
+    else:
+        for _, row in warning_df.head(30).iterrows():
+            color, label, badge_class = severity(row["sla_percent"])
+            is_selected = st.session_state.selected_ticket_id == row["ticket_id"]
+            border = "3px solid #1a1a1a" if is_selected else f"5px solid {color}"
+
+            st.markdown(
+                f"""<div class="ticket-card" style="border-left:{border}">
+                    <b>{row['ticket_id']}</b>
+                    <span class="badge {badge_class}">{label}</span><br>
+                    <span style="color:#555;font-size:13px">{row['category']} · {row['priority']} priority</span>
+                </div>""",
+                unsafe_allow_html=True,
+            )
+            st.progress(min(int(row["sla_percent"]), 100) / 100,
+                        text=f"{row['sla_percent']:.0f}% of SLA window used")
+
+            already_sent = row["ticket_id"] in st.session_state.first_response_sent
+            btn_col1, btn_col2 = st.columns(2)
+
+            if btn_col1.button("Select this ticket →", key=f"btn_{row['ticket_id']}", use_container_width=True):
+                st.session_state.selected_ticket_id = row["ticket_id"]
+                st.session_state.generated_draft = None
+
+            if already_sent:
+                btn_col2.button("✅ First response sent", key=f"sent_{row['ticket_id']}",
+                                 use_container_width=True, disabled=True)
+            else:
+                if btn_col2.button("📧 Send first response", key=f"auto_{row['ticket_id']}", use_container_width=True):
+                    st.session_state.show_first_response_preview[row["ticket_id"]] = True
+                    st.rerun()
+
+            # Show preview modal if triggered
+            if st.session_state.show_first_response_preview.get(row["ticket_id"], False):
+                st.divider()
+                st.write("**Email preview:**")
+                st.text_area("First response template:", value=FIRST_RESPONSE_TEMPLATE, height=180, disabled=True)
+                col_a, col_b = st.columns(2)
+                if col_a.button("✅ Confirm & send", key=f"confirm_{row['ticket_id']}", use_container_width=True):
+                    st.session_state.first_response_sent.add(row["ticket_id"])
+                    st.session_state.approval_history.append({
+                        "time": datetime.now().strftime("%H:%M:%S"),
+                        "ticket_id": row["ticket_id"],
+                        "type": "first_response",
+                        "draft": FIRST_RESPONSE_TEMPLATE,
+                    })
+                    st.session_state.show_first_response_preview[row["ticket_id"]] = False
+                    st.success(f"First response sent for {row['ticket_id']}.")
+                    st.rerun()
+                if col_b.button("❌ Cancel", key=f"cancel_{row['ticket_id']}", use_container_width=True):
+                    st.session_state.show_first_response_preview[row["ticket_id"]] = False
+                    st.rerun()
+                st.divider()
+
+            st.write("")
+
+with col_detail:
+    st.subheader("Ticket detail & AI-drafted resolution update")
+
+    if st.session_state.selected_ticket_id is None:
+        st.info("👈 Click 'Select this ticket' on the left to see details and generate an update.")
+    else:
+        ticket = df[df["ticket_id"] == st.session_state.selected_ticket_id].iloc[0]
+        color, label, _ = severity(ticket["sla_percent"])
+
+        st.markdown(f"### {ticket['ticket_id']} &nbsp; <span style='color:{color}'>{label}</span>",
+                    unsafe_allow_html=True)
+
+        c1, c2, c3 = st.columns(3)
+        c1.metric("Priority", ticket["priority"])
+        c2.metric("Category", ticket["category"])
+        c3.metric("SLA used", f"{ticket['sla_percent']:.0f}%")
+
+        st.progress(min(int(ticket["sla_percent"]), 100) / 100)
+        st.caption(f"Created: {ticket['created_at']}  ·  Elapsed: {ticket['elapsed_hours']:.1f}h "
+                   f"of {ticket['sla_limit_hours']:.0f}h allowed")
+
+        st.divider()
+
+        # --- Generate AI draft for resolution update ---
+        if st.button("✨ Generate resolution update", type="primary"):
+            if not api_key:
+                st.error("Enter your Gemini API key in the sidebar first.")
+            else:
+                with st.spinner("Gemini is drafting a response..."):
+                    try:
+                        client = genai.Client(api_key=api_key)
+                        prompt = (
+                            "You are a support manager writing a short update email to a customer "
+                            "after working on their support ticket. This is NOT the first acknowledgment — "
+                            "we already sent that. This is a status update as you actually resolve the issue.\n\n"
+                            f"Ticket ID: {ticket['ticket_id']}\n"
+                            f"Category: {ticket['category']}\n"
+                            f"Priority: {ticket['priority']}\n"
+                            f"Elapsed: {ticket['elapsed_hours']:.1f} of {ticket['sla_limit_hours']:.0f} hours "
+                            f"({ticket['sla_percent']:.0f}% used)\n\n"
+                            "Write the ACTUAL EMAIL TEXT ONLY -- start directly with a greeting like "
+                            "'Hi there,' and end with a sign-off. Do NOT output a plan, outline, "
+                            "bullet points, headers, or labels. Just the finished email a manager would copy and paste, "
+                            "under 150 words. Sound professional but warm. Suggest next steps or closure if appropriate."
+                        )
+                        resp = client.models.generate_content(
+                            model=model_choice,
+                            contents=prompt,
+                            config={
+                                "temperature": temperature,
+                                "max_output_tokens": max_tokens,
+                                "thinking_config": {"thinking_budget": 0},
+                            },
+                        )
+                        st.session_state.generated_draft = resp.text
+                    except Exception as e:
+                        st.error(f"API error: {e}")
+
+        # --- show draft, let human edit, log on approve ---
+        if st.session_state.generated_draft:
+            draft = st.text_area("📝 Draft resolution update (edit before approving):",
+                                  value=st.session_state.generated_draft, height=180)
+            b1, b2 = st.columns(2)
+            if b1.button("✅ Approve & queue for sending", type="primary"):
+                st.session_state.approval_history.append({
+                    "time": datetime.now().strftime("%H:%M:%S"),
+                    "ticket_id": ticket["ticket_id"],
+                    "type": "resolution_update",
+                    "draft": draft,
+                })
+                st.success(f"Resolution update approved for {ticket['ticket_id']}.")
+                st.session_state.generated_draft = None
+            if b2.button("❌ Reject / discard draft"):
+                st.session_state.generated_draft = None
+                st.warning("Draft discarded.")
+
+        if st.session_state.approval_history:
+            st.divider()
+            st.subheader("📋 Approved this session")
+            for rec in reversed(st.session_state.approval_history[-5:]):
+                type_label = "First response" if rec["type"] == "first_response" else "Resolution update"
+                with st.expander(f"{rec['ticket_id']} ({type_label}) — {rec['time']}"):
+                    st.text_area("", value=rec["draft"], height=140, disabled=True)
