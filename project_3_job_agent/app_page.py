@@ -1,6 +1,5 @@
 import streamlit as st
 from google import genai
-import anthropic
 
 DEFAULT_MASTER_RESUME = """PAVAN KUMAR VAIKUTHERISAL
 Hyderabad, India | +91 90597 45757 | Pavan55vkumar@gmail.com
@@ -57,64 +56,78 @@ CRITICAL INSTRUCTION FOR TRUTHFULNESS:
 5. Output the result in clean Markdown format. Output the final resume ONLY.
 """
 
-def show_page():
-    st.subheader("💼 Job-Search & Resume-Tailoring Agent")
-    st.caption("Custom-tailor resumes factually against target JDs using LLM guardrails.")
 
-    # State variables
+def show_page():
     if "tailored_output" not in st.session_state:
         st.session_state.tailored_output = None
+
+    st.markdown("""
+    <div class="hero" style="padding:24px 30px;">
+        <h1 style="font-size:1.6rem;">💼 Job-Search & Resume-Tailoring Agent</h1>
+        <p>Proactive operations: tailor a verified experience profile against any JD — with a hard anti-fabrication guardrail.</p>
+    </div>
+    """, unsafe_allow_html=True)
+
+    st.markdown("""
+    <div class="content-card">
+        <b style="color:#1E293B">🛡️ The guardrail:</b>
+        <span style="color:#475569"> the model may reorganize and re-emphasize verified experience —
+        it may never invent a skill, metric, or title. If the JD asks for something not in the source
+        profile, the correct output is silence on that skill, not an invented line.</span>
+    </div>
+    """, unsafe_allow_html=True)
+
+    api_key = st.session_state.get("gemini_key", "")
+    model_choice = st.session_state.get("gemini_model", "gemini-flash-latest")
+    temperature = st.session_state.get("temperature", 0.3)
+    max_tokens = st.session_state.get("max_tokens", 450)
+    use_claude = st.session_state.get("use_claude", False)
+    claude_key = st.session_state.get("claude_key", "")
+    claude_model = st.session_state.get("claude_model", "claude-haiku-4-5-20251001")
 
     col_input, col_tailor = st.columns([1, 1.3])
 
     with col_input:
-        st.markdown("### Inputs")
-        master_resume = st.text_area("Your Master Experience Profile:", value=DEFAULT_MASTER_RESUME, height=220)
+        st.markdown("#### Inputs")
+        master_resume = st.text_area("Your Master Experience Profile:", value=DEFAULT_MASTER_RESUME, height=240)
         job_desc = st.text_area("Paste Target Job Description (JD):", value=DEFAULT_JOB_DESCRIPTION, height=200)
-
-        # Pull settings from root session state
-        api_key = st.session_state.get("gemini_key", "")
-        model_choice = st.session_state.get("gemini_model", "gemini-2.0-flash")
-        temperature = st.session_state.get("temperature", 0.2) # Defaults to 0.2 for strict facts
-        max_tokens = st.session_state.get("max_tokens", 500)
-        use_claude = st.session_state.get("use_claude", False)
-        claude_key = st.session_state.get("claude_key", "")
-
-        tailor_btn = st.button("🚀 Tailor Resume", type="primary", use_container_width=True)
+        tailor_btn = st.button("🚀 Tailor Resume", type="primary", width="stretch")
 
     with col_tailor:
-        st.markdown("### 📝 Tailored Resume Output")
-        
+        st.markdown("#### 📝 Tailored Resume Output")
+
         if tailor_btn:
             if use_claude and not claude_key:
-                st.error("Please set your Anthropic Claude API Key in the sidebar.")
+                st.warning("Open **⚙️ Advanced Settings** in the sidebar and add your Claude API key first.")
             elif not use_claude and not api_key:
-                st.error("Please set your Google Gemini API Key in the sidebar.")
+                st.warning("Open **⚙️ Advanced Settings** in the sidebar and add your Gemini API key first.")
+            elif not master_resume.strip() or not job_desc.strip():
+                st.warning("Both the master profile and the job description need content before tailoring.")
             else:
-                with st.spinner("AI is custom-tailoring your experience profile..."):
+                with st.spinner("Tailoring your experience profile against the JD..."):
                     prompt = f"""
-                    Here is my Master Resume:
-                    <master_resume>
-                    {master_resume}
-                    </master_resume>
+Here is my Master Resume:
+<master_resume>
+{master_resume}
+</master_resume>
 
-                    Here is the Target Job Description:
-                    <job_description>
-                    {job_desc}
-                    </job_description>
+Here is the Target Job Description:
+<job_description>
+{job_desc}
+</job_description>
 
-                    Please customize my resume by highlighting my most relevant operations and Epic systems experiences that align with the job description. Follow the strict anti-fabrication rules provided in the system prompt.
-                    """
-                    
+Please customize my resume by highlighting my most relevant operations and Epic systems experiences that align with the job description. Follow the strict anti-fabrication rules provided in the system prompt.
+"""
                     try:
                         if use_claude:
+                            import anthropic
                             client = anthropic.Anthropic(api_key=claude_key)
                             message = client.messages.create(
-                                model="claude-3-5-sonnet",
+                                model=claude_model,
                                 max_tokens=max_tokens,
                                 temperature=temperature,
                                 system=SYSTEM_PROMPT,
-                                messages=[{"role": "user", "content": prompt}]
+                                messages=[{"role": "user", "content": prompt}],
                             )
                             st.session_state.tailored_output = message.content[0].text
                         else:
@@ -127,15 +140,15 @@ def show_page():
                                     "temperature": temperature,
                                     "max_output_tokens": max_tokens,
                                     "thinking_config": {"thinking_budget": 0},
-                                }
+                                },
                             )
                             st.session_state.tailored_output = resp.text
-                        st.success("Resume tailored factually!")
+                        st.toast("Resume tailored factually", icon="✅")
                     except Exception as e:
-                        st.error(f"Tailoring failed: {e}")
+                        st.error("The tailoring call didn't go through — try a different model under "
+                                 f"**⚙️ Advanced Settings** in the sidebar. ({e})")
 
         if st.session_state.tailored_output:
-            st.markdown("#### Preview:")
             st.markdown(st.session_state.tailored_output)
             st.divider()
             st.download_button(
@@ -143,7 +156,7 @@ def show_page():
                 data=st.session_state.tailored_output,
                 file_name="Tailored_Resume.md",
                 mime="text/markdown",
-                use_container_width=True
+                width="stretch",
             )
         else:
             st.info("Paste a Job Description on the left and click 'Tailor Resume' to generate a tailored factual profile.")

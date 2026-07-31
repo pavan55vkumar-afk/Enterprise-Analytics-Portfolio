@@ -5,27 +5,22 @@ from datetime import datetime
 import smtplib
 import ssl
 from email.mime.text import MIMEText
-import matplotlib
-matplotlib.use("Agg")
-import matplotlib.pyplot as plt
+import plotly.express as px
+import plotly.graph_objects as go
 
-ACCENT = "#2563EB"
-ALERT = "#EA580C"
-DARK = "#1E293B"
-MUTED = "#64748B"
-BG = "#FAFAFA"
-plt.rcParams.update({
-    "font.family": "sans-serif",
-    "font.size": 10,
-    "axes.facecolor": BG,
-    "figure.facecolor": "white",
-    "axes.edgecolor": "#CBD5E1",
-    "axes.labelcolor": DARK,
-    "xtick.color": MUTED,
-    "ytick.color": MUTED,
-    "text.color": DARK,
-    "legend.frameon": False,
-})
+INDIGO = "#4F46E5"
+TEAL = "#0D9488"
+ORANGE = "#EA580C"
+RED = "#DC2626"
+SLATE = "#94A3B8"
+
+PLOTLY_LAYOUT = dict(
+    template="plotly_white",
+    paper_bgcolor="rgba(0,0,0,0)",
+    plot_bgcolor="rgba(248,250,255,0.7)",
+    font=dict(color="#334155", size=12),
+    margin=dict(l=10, r=10, t=48, b=10),
+)
 
 FIRST_RESPONSE_TEMPLATE = """Hi there,
 
@@ -38,6 +33,7 @@ We appreciate your patience in the meantime.
 Thank you,
 Support Team"""
 
+
 def send_real_email(sender, app_password, recipient, subject, body):
     msg = MIMEText(body)
     msg["Subject"] = subject
@@ -47,6 +43,7 @@ def send_real_email(sender, app_password, recipient, subject, body):
     with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
         server.login(sender, app_password)
         server.sendmail(sender, recipient, msg.as_string())
+
 
 def generate_tickets_if_missing():
     import os
@@ -103,6 +100,7 @@ def generate_tickets_if_missing():
     })
     out.to_csv("tickets.csv", index=False)
 
+
 @st.cache_data
 def load_tickets():
     generate_tickets_if_missing()
@@ -110,10 +108,17 @@ def load_tickets():
     df["sla_percent"] = (df["elapsed_hours"] / df["sla_limit_hours"] * 100).round(1)
     return df
 
-def show_page():
-    st.subheader("🚨 SLA Incident Responder")
-    st.caption("Auto-send fixed first response + AI-drafted resolution updates")
 
+def severity(pct):
+    if pct >= 100:
+        return RED, "🔴 BREACHED", "badge-breached"
+    elif pct >= 90:
+        return ORANGE, "🟠 CRITICAL", "badge-critical"
+    else:
+        return "#D97706", "🟡 WATCH", "badge-watch"
+
+
+def show_page():
     # --- session state (must be initialized before anything reads it) ---
     if "selected_ticket_id" not in st.session_state:
         st.session_state.selected_ticket_id = None
@@ -126,48 +131,51 @@ def show_page():
     if "show_first_response_preview" not in st.session_state:
         st.session_state.show_first_response_preview = {}
 
-    df = load_tickets()
+    st.markdown("""
+    <div class="hero" style="padding:24px 30px;">
+        <h1 style="font-size:1.6rem;">🚨 SLA Incident Responder</h1>
+        <p>Reactive operations: catch tickets <i>before</i> they breach — template first response, AI-drafted updates, human approval.</p>
+    </div>
+    """, unsafe_allow_html=True)
 
-    # Pull credentials and configurations from the shared session state
+    try:
+        df = load_tickets()
+    except Exception:
+        st.warning("Ticket data couldn't be loaded. Refreshing usually resolves this — the dataset regenerates automatically.")
+        return
+
     api_key = st.session_state.get("gemini_key", "")
-    model_choice = st.session_state.get("gemini_model", "gemini-2.0-flash")
+    model_choice = st.session_state.get("gemini_model", "gemini-flash-latest")
     temperature = st.session_state.get("temperature", 0.3)
-    max_tokens = st.session_state.get("max_tokens", 350)
+    max_tokens = st.session_state.get("max_tokens", 450)
     threshold = st.session_state.get("threshold", 75)
+    use_claude = st.session_state.get("use_claude", False)
+    claude_key = st.session_state.get("claude_key", "")
+    claude_model = st.session_state.get("claude_model", "claude-haiku-4-5-20251001")
 
     sender_email = st.session_state.get("sender_email", "pavanwork111@gmail.com")
     sender_app_password = st.session_state.get("sender_app_password", "")
     demo_recipient = st.session_state.get("demo_recipient", "pavanwork111@gmail.com")
 
-    # --- filter to warning tickets ---
     warning_df = df[(df["sla_percent"] >= threshold) & (df["status"] != "Resolved")].copy()
     warning_df = warning_df.sort_values("sla_percent", ascending=False)
     breached_now = int((warning_df["sla_percent"] >= 100).sum())
     critical_now = int(((warning_df["sla_percent"] >= 90) & (warning_df["sla_percent"] < 100)).sum())
     compliance_rate = round(100 - (df["sla_breach"].sum() / len(df) * 100), 1)
 
-    # --- KPI header ---
     k1, k2, k3, k4 = st.columns(4)
     with k1:
-        st.markdown(f"<div class='kpi-box'><h2 style='margin:0'>{len(df)}</h2>"
-                    f"<span style='color:#666'>Total tickets</span></div>", unsafe_allow_html=True)
+        st.markdown(f"<div class='kpi-card'><h2>{len(df)}</h2>"
+                    f"<span>Total tickets</span></div>", unsafe_allow_html=True)
     with k2:
-        st.markdown(f"<div class='kpi-box' style='border-color:#fbc02d'><h2 style='margin:0;color:#b8860b'>{len(warning_df)}</h2>"
-                    f"<span style='color:#666'>At risk (≥{threshold}% SLA)</span></div>", unsafe_allow_html=True)
+        st.markdown(f"<div class='kpi-card' style='border-top-color:#D97706'><h2 style='color:#D97706'>{len(warning_df)}</h2>"
+                    f"<span>At risk (≥{threshold}% SLA)</span></div>", unsafe_allow_html=True)
     with k3:
-        st.markdown(f"<div class='kpi-box' style='border-color:#d32f2f'><h2 style='margin:0;color:#d32f2f'>{breached_now}</h2>"
-                    f"<span style='color:#666'>Already breached</span></div>", unsafe_allow_html=True)
+        st.markdown(f"<div class='kpi-card' style='border-top-color:{RED}'><h2 style='color:{RED}'>{breached_now}</h2>"
+                    f"<span>Already breached</span></div>", unsafe_allow_html=True)
     with k4:
-        st.markdown(f"<div class='kpi-box' style='border-color:#2e7d32'><h2 style='margin:0;color:#2e7d32'>{compliance_rate}%</h2>"
-                    f"<span style='color:#666'>Overall SLA compliance</span></div>", unsafe_allow_html=True)
-
-    def severity(pct):
-        if pct >= 100:
-            return "#d32f2f", "🔴 BREACHED", "badge-breached"
-        elif pct >= 90:
-            return "#f57c00", "🟠 CRITICAL", "badge-critical"
-        else:
-            return "#fbc02d", "🟡 WATCH", "badge-watch"
+        st.markdown(f"<div class='kpi-card' style='border-top-color:{TEAL}'><h2 style='color:{TEAL}'>{compliance_rate}%</h2>"
+                    f"<span>Overall SLA compliance</span></div>", unsafe_allow_html=True)
 
     st.write("")
     tab_action, tab_insights = st.tabs(["🎫 Ticket Action Center", "📊 Insights & Analytics"])
@@ -176,7 +184,7 @@ def show_page():
         col_list, col_detail = st.columns([1, 1.4])
 
         with col_list:
-            st.subheader("Tickets at risk")
+            st.markdown("#### Tickets at risk")
             st.caption(f"Sorted worst-first · {breached_now} breached · {critical_now} critical")
 
             if warning_df.empty:
@@ -185,13 +193,13 @@ def show_page():
                 for _, row in warning_df.head(30).iterrows():
                     color, label, badge_class = severity(row["sla_percent"])
                     is_selected = st.session_state.selected_ticket_id == row["ticket_id"]
-                    border = "3px solid #1a1a1a" if is_selected else f"5px solid {color}"
+                    border = f"5px solid {INDIGO}" if is_selected else f"5px solid {color}"
 
                     st.markdown(
                         f"""<div class="ticket-card" style="border-left:{border}">
-                            <b>{row['ticket_id']}</b>
+                            <b style="color:#1E293B">{row['ticket_id']}</b>
                             <span class="badge {badge_class}">{label}</span><br>
-                            <span style="color:#555;font-size:13px">{row['category']} · {row['priority']} priority</span>
+                            <span style="color:#64748B;font-size:13px">{row['category']} · {row['priority']} priority</span>
                         </div>""",
                         unsafe_allow_html=True,
                     )
@@ -213,15 +221,15 @@ def show_page():
                             st.session_state.show_first_response_preview[row["ticket_id"]] = True
                             st.rerun()
 
-                    # Show preview modal if triggered
                     if st.session_state.show_first_response_preview.get(row["ticket_id"], False):
                         st.divider()
                         st.write("**Email preview:**")
-                        st.text_area("First response template:", value=FIRST_RESPONSE_TEMPLATE, height=180, disabled=True)
+                        st.text_area("First response template:", value=FIRST_RESPONSE_TEMPLATE, height=180,
+                                     disabled=True, key=f"prev_{row['ticket_id']}")
                         col_a, col_b = st.columns(2)
                         if col_a.button("✅ Confirm & send", key=f"confirm_{row['ticket_id']}", width="stretch"):
                             if not sender_email or not sender_app_password or not demo_recipient:
-                                st.error("Fill in sender email, App Password, and recipient in the sidebar first.")
+                                st.warning("Open **📧 Email (SMTP) Settings** in the sidebar and fill in the sender, App Password, and recipient first.")
                             else:
                                 try:
                                     send_real_email(
@@ -237,10 +245,10 @@ def show_page():
                                         "draft": FIRST_RESPONSE_TEMPLATE,
                                     })
                                     st.session_state.show_first_response_preview[row["ticket_id"]] = False
-                                    st.success(f"Email actually sent to {demo_recipient} for {row['ticket_id']}.")
+                                    st.toast(f"📧 Email sent to {demo_recipient}", icon="✅")
                                     st.rerun()
                                 except Exception as e:
-                                    st.error(f"Email send failed: {e}")
+                                    st.error(f"Email send failed — check the App Password and sender address. ({e})")
                         if col_b.button("❌ Cancel", key=f"cancel_{row['ticket_id']}", width="stretch"):
                             st.session_state.show_first_response_preview[row["ticket_id"]] = False
                             st.rerun()
@@ -249,7 +257,7 @@ def show_page():
                     st.write("")
 
         with col_detail:
-            st.subheader("Ticket detail & AI-drafted resolution update")
+            st.markdown("#### Ticket detail & AI-drafted resolution update")
 
             if st.session_state.selected_ticket_id is None:
                 st.info("👈 Click 'Select this ticket' on the left to see details and generate an update.")
@@ -271,42 +279,54 @@ def show_page():
 
                 st.divider()
 
-                # --- Generate AI draft for resolution update ---
                 if st.button("✨ Generate resolution update", type="primary"):
-                    if not api_key:
-                        st.error("Enter your Gemini API key in the sidebar first.")
+                    if use_claude and not claude_key:
+                        st.warning("Open **⚙️ Advanced Settings** in the sidebar and add your Claude API key first.")
+                    elif not use_claude and not api_key:
+                        st.warning("Open **⚙️ Advanced Settings** in the sidebar and add your Gemini API key first.")
                     else:
-                        with st.spinner("Gemini is drafting a response..."):
+                        with st.spinner("The model is drafting a response..."):
+                            prompt = (
+                                "You are a support manager writing a short update email to a customer "
+                                "after working on their support ticket. This is NOT the first acknowledgment — "
+                                "we already sent that. This is a status update as you actually resolve the issue.\n\n"
+                                f"Ticket ID: {ticket['ticket_id']}\n"
+                                f"Category: {ticket['category']}\n"
+                                f"Priority: {ticket['priority']}\n"
+                                f"Elapsed: {ticket['elapsed_hours']:.1f} of {ticket['sla_limit_hours']:.0f} hours "
+                                f"({ticket['sla_percent']:.0f}% used)\n\n"
+                                "Write the ACTUAL EMAIL TEXT ONLY -- start directly with a greeting like "
+                                "'Hi there,' and end with a sign-off. Do NOT output a plan, outline, "
+                                "bullet points, headers, or labels. Just the finished email a manager would copy and paste, "
+                                "under 150 words. Sound professional but warm. Suggest next steps or closure if appropriate."
+                            )
                             try:
-                                client = genai.Client(api_key=api_key)
-                                prompt = (
-                                    "You are a support manager writing a short update email to a customer "
-                                    "after working on their support ticket. This is NOT the first acknowledgment — "
-                                    "we already sent that. This is a status update as you actually resolve the issue.\n\n"
-                                    f"Ticket ID: {ticket['ticket_id']}\n"
-                                    f"Category: {ticket['category']}\n"
-                                    f"Priority: {ticket['priority']}\n"
-                                    f"Elapsed: {ticket['elapsed_hours']:.1f} of {ticket['sla_limit_hours']:.0f} hours "
-                                    f"({ticket['sla_percent']:.0f}% used)\n\n"
-                                    "Write the ACTUAL EMAIL TEXT ONLY -- start directly with a greeting like "
-                                    "'Hi there,' and end with a sign-off. Do NOT output a plan, outline, "
-                                    "bullet points, headers, or labels. Just the finished email a manager would copy and paste, "
-                                    "under 150 words. Sound professional but warm. Suggest next steps or closure if appropriate."
-                                )
-                                resp = client.models.generate_content(
-                                    model=model_choice,
-                                    contents=prompt,
-                                    config={
-                                        "temperature": temperature,
-                                        "max_output_tokens": max_tokens,
-                                        "thinking_config": {"thinking_budget": 0},
-                                    },
-                                )
-                                st.session_state.generated_draft = resp.text
+                                if use_claude:
+                                    import anthropic
+                                    client = anthropic.Anthropic(api_key=claude_key)
+                                    message = client.messages.create(
+                                        model=claude_model,
+                                        max_tokens=max_tokens,
+                                        temperature=temperature,
+                                        messages=[{"role": "user", "content": prompt}],
+                                    )
+                                    st.session_state.generated_draft = message.content[0].text
+                                else:
+                                    client = genai.Client(api_key=api_key)
+                                    resp = client.models.generate_content(
+                                        model=model_choice,
+                                        contents=prompt,
+                                        config={
+                                            "temperature": temperature,
+                                            "max_output_tokens": max_tokens,
+                                            "thinking_config": {"thinking_budget": 0},
+                                        },
+                                    )
+                                    st.session_state.generated_draft = resp.text
+                                st.toast("Draft ready for review", icon="📝")
                             except Exception as e:
-                                st.error(f"API error: {e}")
+                                st.error(f"The model call didn't go through — try a different model in Advanced Settings. ({e})")
 
-                # --- show draft, let human edit, log on approve ---
                 if st.session_state.generated_draft:
                     draft = st.text_area("📝 Draft resolution update (edit before approving):",
                                           value=st.session_state.generated_draft, height=180)
@@ -318,7 +338,7 @@ def show_page():
                             "type": "resolution_update",
                             "draft": draft,
                         })
-                        st.success(f"Resolution update approved for {ticket['ticket_id']}.")
+                        st.toast(f"Resolution update approved for {ticket['ticket_id']}", icon="✅")
                         st.session_state.generated_draft = None
                     if b2.button("❌ Reject / discard draft"):
                         st.session_state.generated_draft = None
@@ -326,115 +346,122 @@ def show_page():
 
                 if st.session_state.approval_history:
                     st.divider()
-                    st.subheader("📋 Approved this session")
+                    st.markdown("#### 📋 Approved this session")
                     for rec in reversed(st.session_state.approval_history[-5:]):
                         type_label = "First response" if rec["type"] == "first_response" else "Resolution update"
                         with st.expander(f"{rec['ticket_id']} ({type_label}) — {rec['time']}"):
-                            st.text_area("", value=rec["draft"], height=140, disabled=True)
+                            st.text_area("", value=rec["draft"], height=140, disabled=True,
+                                         key=f"hist_{rec['ticket_id']}_{rec['time']}")
 
     with tab_insights:
-        st.subheader("Where SLA breaches actually come from")
+        st.markdown("#### Where SLA breaches actually come from")
         st.caption("Same underlying ticket data, aggregated to show the pattern instead of ticket-by-ticket detail.")
 
         resolved_df = df[df["status"] == "Resolved"].copy()
 
         if resolved_df.empty:
             st.info("No resolved tickets yet in this dataset to analyze.")
-        else:
-            cat_df = resolved_df.groupby("category").agg(
-                volume=("ticket_id", "count"),
-                avg_handling_time=("elapsed_hours", "mean"),
-                sla_target=("sla_limit_hours", "first"),
-                breach_count=("sla_breach", "sum"),
-                avg_csat=("csat_score", "mean"),
-            ).reset_index()
-            cat_df["breach_rate_pct"] = (cat_df["breach_count"] / cat_df["volume"] * 100).round(1)
+            return
 
-            bottleneck = cat_df.loc[cat_df["breach_rate_pct"].idxmax()]
-            st.markdown(
-                f"**Biggest bottleneck:** `{bottleneck['category']}` tickets breach {bottleneck['breach_rate_pct']:.0f}% "
-                f"of the time — average handling time is {bottleneck['avg_handling_time']:.1f}h against a "
-                f"{bottleneck['sla_target']:.0f}h target."
+        cat_df = resolved_df.groupby("category").agg(
+            volume=("ticket_id", "count"),
+            avg_handling_time=("elapsed_hours", "mean"),
+            sla_target=("sla_limit_hours", "first"),
+            breach_count=("sla_breach", "sum"),
+            avg_csat=("csat_score", "mean"),
+        ).reset_index()
+        cat_df["breach_rate_pct"] = (cat_df["breach_count"] / cat_df["volume"] * 100).round(1)
+
+        bottleneck = cat_df.loc[cat_df["breach_rate_pct"].idxmax()]
+        st.markdown(
+            f"""<div class="content-card">
+            <b style="color:#1E293B">Biggest bottleneck:</b>
+            <span style="color:#475569"><code>{bottleneck['category']}</code> tickets breach
+            {bottleneck['breach_rate_pct']:.0f}% of the time — average handling time is
+            {bottleneck['avg_handling_time']:.1f}h against a {bottleneck['sla_target']:.0f}h target.</span>
+            </div>""",
+            unsafe_allow_html=True,
+        )
+
+        chart1, chart2 = st.columns(2)
+
+        with chart1:
+            pareto = cat_df.sort_values("breach_count", ascending=False).copy()
+            pareto["cumulative_pct"] = (pareto["breach_count"].cumsum() / pareto["breach_count"].sum() * 100).round(1)
+
+            fig = go.Figure()
+            fig.add_trace(go.Bar(
+                x=pareto["category"], y=pareto["breach_count"],
+                name="SLA breaches", marker_color=INDIGO, opacity=0.9,
+            ))
+            fig.add_trace(go.Scatter(
+                x=pareto["category"], y=pareto["cumulative_pct"],
+                name="Cumulative %", yaxis="y2",
+                mode="lines+markers", line=dict(color=ORANGE, width=2),
+                marker=dict(symbol="diamond", size=8),
+            ))
+            fig.update_layout(
+                **PLOTLY_LAYOUT,
+                title="SLA breaches by category (Pareto)",
+                yaxis=dict(title="Breaches"),
+                yaxis2=dict(title="Cumulative %", overlaying="y", side="right", range=[0, 110]),
+                legend=dict(orientation="h", y=-0.25),
+                height=380,
             )
+            st.plotly_chart(fig, width="stretch")
 
-            chart1, chart2 = st.columns(2)
+        with chart2:
+            csat = resolved_df.groupby(["category", "sla_breach"])["csat_score"].mean().reset_index()
+            csat["outcome"] = csat["sla_breach"].map({0: "SLA Met", 1: "SLA Breached"})
+            fig = px.bar(
+                csat, x="category", y="csat_score", color="outcome", barmode="group",
+                color_discrete_map={"SLA Met": INDIGO, "SLA Breached": ORANGE},
+            )
+            fig.update_layout(
+                **PLOTLY_LAYOUT,
+                title="Customer satisfaction: met vs breached",
+                yaxis=dict(title="Avg CSAT (1–5)", range=[0, 5.5]),
+                xaxis=dict(title=""),
+                legend=dict(orientation="h", y=-0.25, title=""),
+                height=380,
+            )
+            st.plotly_chart(fig, width="stretch")
 
-            with chart1:
-                pareto = cat_df.sort_values("breach_count", ascending=False)
-                pareto["cumulative_pct"] = (pareto["breach_count"].cumsum() / pareto["breach_count"].sum() * 100)
+        st.write("")
+        df_trend = df.copy()
+        df_trend["created_dt"] = pd.to_datetime(df_trend["created_at"])
+        df_trend["week"] = df_trend["created_dt"].dt.to_period("W").astype(str)
 
-                fig, ax1 = plt.subplots(figsize=(5.5, 4))
-                ax1.bar(pareto["category"], pareto["breach_count"], color=ACCENT, alpha=0.85, width=0.55)
-                ax1.set_ylabel("SLA breaches", fontweight="bold")
-                ax1.set_xticks(range(len(pareto)))
-                ax1.set_xticklabels(pareto["category"], rotation=20, ha="right")
+        def outcome(row):
+            if row["status"] != "Resolved":
+                return "Open / In Progress"
+            return "Resolved (Breached)" if row["sla_breach"] == 1 else "Resolved (Met)"
 
-                ax2 = ax1.twinx()
-                ax2.plot(pareto["category"], pareto["cumulative_pct"], color=ALERT, marker="D", ms=5, linewidth=1.5)
-                ax2.set_ylabel("Cumulative %", fontweight="bold")
-                ax2.set_ylim(0, 110)
+        df_trend["outcome"] = df_trend.apply(outcome, axis=1)
+        weekly = df_trend.groupby(["week", "outcome"]).size().reset_index(name="tickets")
 
-                ax1.set_title("SLA breaches by category", fontweight="bold", pad=12)
-                fig.tight_layout()
-                st.pyplot(fig)
-                plt.close(fig)
+        fig = px.bar(
+            weekly, x="week", y="tickets", color="outcome",
+            color_discrete_map={
+                "Resolved (Met)": INDIGO,
+                "Resolved (Breached)": ORANGE,
+                "Open / In Progress": SLATE,
+            },
+        )
+        fig.update_layout(
+            **PLOTLY_LAYOUT,
+            title="Ticket volume by week and outcome",
+            xaxis=dict(title="Week", tickangle=-30),
+            yaxis=dict(title="Tickets"),
+            legend=dict(orientation="h", y=-0.35, title=""),
+            height=400,
+            barmode="stack",
+        )
+        st.plotly_chart(fig, width="stretch")
 
-            with chart2:
-                csat_pivot = resolved_df.groupby(["category", "sla_breach"])["csat_score"].mean().unstack()
-                csat_pivot.columns = ["SLA Met", "SLA Breached"] if 0 in csat_pivot.columns and 1 in csat_pivot.columns else csat_pivot.columns
-
-                fig, ax = plt.subplots(figsize=(5.5, 4))
-                x = range(len(csat_pivot))
-                width = 0.35
-                if "SLA Met" in csat_pivot.columns:
-                    ax.bar([i - width/2 for i in x], csat_pivot["SLA Met"], width, label="SLA Met", color=ACCENT)
-                if "SLA Breached" in csat_pivot.columns:
-                    ax.bar([i + width/2 for i in x], csat_pivot["SLA Breached"], width, label="SLA Breached", color=ALERT)
-                ax.set_xticks(list(x))
-                ax.set_xticklabels(csat_pivot.index, rotation=20, ha="right")
-                ax.set_ylabel("Avg CSAT (1-5)", fontweight="bold")
-                ax.set_ylim(0, 5.5)
-                ax.set_title("Customer satisfaction: met vs breached", fontweight="bold", pad=12)
-                ax.legend()
-                ax.grid(axis="y", linestyle=":", alpha=0.5, color="#CBD5E1")
-                fig.tight_layout()
-                st.pyplot(fig)
-                plt.close(fig)
-
-            st.write("")
-            st.markdown("**Ticket volume and SLA outcome over time**")
-
-            df_trend = df.copy()
-            df_trend["created_dt"] = pd.to_datetime(df_trend["created_at"])
-            df_trend["week"] = df_trend["created_dt"].dt.to_period("W").astype(str)
-
-            def outcome(row):
-                if row["status"] != "Resolved":
-                    return "Open / In Progress"
-                return "Resolved (Breached)" if row["sla_breach"] == 1 else "Resolved (Met)"
-
-            df_trend["outcome"] = df_trend.apply(outcome, axis=1)
-            weekly = df_trend.groupby(["week", "outcome"]).size().unstack(fill_value=0)
-            cols_order = [c for c in ["Resolved (Met)", "Resolved (Breached)", "Open / In Progress"] if c in weekly.columns]
-            weekly = weekly[cols_order]
-            colors = {"Resolved (Met)": ACCENT, "Resolved (Breached)": ALERT, "Open / In Progress": "#CBD5E1"}
-
-            fig, ax = plt.subplots(figsize=(11, 4))
-            weekly.plot(kind="bar", stacked=True, color=[colors[c] for c in weekly.columns], ax=ax, width=0.65)
-            ax.set_ylabel("Tickets", fontweight="bold")
-            ax.set_xlabel("Week", fontweight="bold")
-            ax.set_title("Ticket volume by week and outcome", fontweight="bold", pad=12)
-            ax.legend(loc="upper left")
-            ax.grid(axis="y", linestyle=":", alpha=0.5, color="#CBD5E1")
-            plt.xticks(rotation=30, ha="right")
-            fig.tight_layout()
-            st.pyplot(fig)
-            plt.close(fig)
-
-            st.write("")
-            st.markdown("**Category breakdown**")
-            display_df = cat_df[["category", "volume", "avg_handling_time", "sla_target", "breach_rate_pct", "avg_csat"]].copy()
-            display_df.columns = ["Category", "Volume", "Avg handling (h)", "SLA target (h)", "Breach rate (%)", "Avg CSAT"]
-            display_df = display_df.round(1)
-            st.dataframe(display_df, width="stretch", hide_index=True)
-st.write("")
+        st.write("")
+        st.markdown("#### Category breakdown")
+        display_df = cat_df[["category", "volume", "avg_handling_time", "sla_target", "breach_rate_pct", "avg_csat"]].copy()
+        display_df.columns = ["Category", "Volume", "Avg handling (h)", "SLA target (h)", "Breach rate (%)", "Avg CSAT"]
+        display_df = display_df.round(1)
+        st.dataframe(display_df, width="stretch", hide_index=True)
