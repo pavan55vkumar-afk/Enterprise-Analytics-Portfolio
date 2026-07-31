@@ -54,8 +54,13 @@ with st.sidebar:
         gemini_key = st.text_input("Google Gemini API Key", type="password", value=st.session_state.get("gemini_key", ""))
         st.session_state.gemini_key = gemini_key
 
-    # Hidden or default models
-    st.session_state.gemini_model = "gemini-2.0-flash"
+    # Selectbox for Gemini models to resolve 429 quota issues
+    gemini_model = st.selectbox(
+        "Gemini Model Choice",
+        ["gemini-1.5-flash", "gemini-2.0-flash", "gemini-1.5-pro"],
+        index=0
+    )
+    st.session_state.gemini_model = gemini_model
     
     # Sliders
     st.session_state.temperature = st.slider("LLM Temperature", 0.0, 1.0, 0.3, 0.1)
