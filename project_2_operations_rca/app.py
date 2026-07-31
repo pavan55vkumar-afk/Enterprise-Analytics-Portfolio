@@ -41,8 +41,7 @@ with st.sidebar:
         "Navigate pages:",
         [
             "🚨 Project 2: SLA Incident Responder",
-            "💼 Project 3: Job-Search Agent",
-            "🎫 Project 1: Cohort Copywriter"
+            "💼 Project 3: Job-Search Agent"
         ]
     )
 
@@ -82,7 +81,7 @@ with st.sidebar:
 st.markdown(
     f"""<div class="project-header">
         <h1 style='color:white;margin:0;'>Enterprise Analytics & AI Portfolio Portal</h1>
-        <p style='margin:5px 0 0 0;opacity:0.8;'>Demonstrating FDE Strategist Case Studies: SQL RFM Cohorts, SLA Dashboards & Prompt Agents.</p>
+        <p style='margin:5px 0 0 0;opacity:0.8;'>Demonstrating FDE Strategist Case Studies: SLA Incident Dashboard & AI Resume-Tailoring Agent.</p>
     </div>""",
     unsafe_allow_html=True
 )
@@ -95,7 +94,3 @@ if selected_project == "🚨 Project 2: SLA Incident Responder":
 elif selected_project == "💼 Project 3: Job-Search Agent":
     import project_3_job_agent.app_page as p3_page
     p3_page.show_page()
-
-elif selected_project == "🎫 Project 1: Cohort Copywriter":
-    import project_1_sales_cohort.app_page as p1_page
-    p1_page.show_page()
