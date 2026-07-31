@@ -40,8 +40,8 @@ with st.sidebar:
     selected_project = st.radio(
         "Navigate pages:",
         [
-            "🚨 Project 2: SLA Incident Responder",
-            "💼 Project 3: Job-Search Agent"
+            "🚨 Project 1: SLA Incident Responder",
+            "💼 Project 2: Job-Search Agent"
         ]
     )
 
@@ -67,8 +67,8 @@ with st.sidebar:
     st.session_state.temperature = st.slider("LLM Temperature", 0.0, 1.0, 0.3, 0.1)
     st.session_state.max_tokens = st.slider("LLM Max Tokens", 100, 1000, 450, 50)
 
-    # 3. SMTP parameters (Project 2 only)
-    if selected_project == "🚨 Project 2: SLA Incident Responder":
+    # 3. SMTP parameters (Project 1 only)
+    if selected_project == "🚨 Project 1: SLA Incident Responder":
         st.divider()
         st.subheader("📧 Real Email SMTP settings")
         st.caption("App Passwords required to bypass Gmail MFA.")
@@ -87,10 +87,10 @@ st.markdown(
 )
 
 # Route execution to correct page
-if selected_project == "🚨 Project 2: SLA Incident Responder":
+if selected_project == "🚨 Project 1: SLA Incident Responder":
     import project_2_operations_rca.app_page as p2_page
     p2_page.show_page()
     
-elif selected_project == "💼 Project 3: Job-Search Agent":
+elif selected_project == "💼 Project 2: Job-Search Agent":
     import project_3_job_agent.app_page as p3_page
     p3_page.show_page()
