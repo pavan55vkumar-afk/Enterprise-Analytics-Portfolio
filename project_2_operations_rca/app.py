@@ -13,6 +13,9 @@ import streamlit as st
 import pandas as pd
 from google import genai
 from datetime import datetime
+import smtplib
+import ssl
+from email.mime.text import MIMEText
 import matplotlib
 matplotlib.use("Agg")
 import matplotlib.pyplot as plt
@@ -45,6 +48,18 @@ We appreciate your patience in the meantime.
 
 Thank you,
 Support Team"""
+
+
+def send_real_email(sender, app_password, recipient, subject, body):
+    msg = MIMEText(body)
+    msg["Subject"] = subject
+    msg["From"] = sender
+    msg["To"] = recipient
+    context = ssl.create_default_context()
+    with smtplib.SMTP_SSL("smtp.gmail.com", 465, context=context) as server:
+        server.login(sender, app_password)
+        server.sendmail(sender, recipient, msg.as_string())
+
 
 st.set_page_config(page_title="SLA Incident Responder", layout="wide", page_icon="🚨")
 
@@ -164,6 +179,13 @@ with st.sidebar:
     max_tokens = st.slider("Max tokens", 100, 500, 350, 50)
     threshold = st.slider("SLA warning threshold (%)", 50, 100, 75)
 
+    st.divider()
+    st.header("📧 Real email sending")
+    st.caption("Uses Gmail SMTP with an App Password (not your normal Gmail password).")
+    sender_email = st.text_input("Sender Gmail address", value="pavanwork111@gmail.com")
+    sender_app_password = st.text_input("Gmail App Password", type="password")
+    demo_recipient = st.text_input("Send to (recipient email)", value="pavanwork111@gmail.com")
+
 # --- STEP 2 & 3: filter to warning tickets ---
 warning_df = df[(df["sla_percent"] >= threshold) & (df["status"] != "Resolved")].copy()
 warning_df = warning_df.sort_values("sla_percent", ascending=False)
@@ -245,16 +267,27 @@ with tab_action:
                     st.text_area("First response template:", value=FIRST_RESPONSE_TEMPLATE, height=180, disabled=True)
                     col_a, col_b = st.columns(2)
                     if col_a.button("✅ Confirm & send", key=f"confirm_{row['ticket_id']}", width="stretch"):
-                        st.session_state.first_response_sent.add(row["ticket_id"])
-                        st.session_state.approval_history.append({
-                            "time": datetime.now().strftime("%H:%M:%S"),
-                            "ticket_id": row["ticket_id"],
-                            "type": "first_response",
-                            "draft": FIRST_RESPONSE_TEMPLATE,
-                        })
-                        st.session_state.show_first_response_preview[row["ticket_id"]] = False
-                        st.success(f"First response sent for {row['ticket_id']}.")
-                        st.rerun()
+                        if not sender_email or not sender_app_password or not demo_recipient:
+                            st.error("Fill in sender email, App Password, and recipient in the sidebar first.")
+                        else:
+                            try:
+                                send_real_email(
+                                    sender_email, sender_app_password, demo_recipient,
+                                    subject=f"We've received your request — Ticket {row['ticket_id']}",
+                                    body=FIRST_RESPONSE_TEMPLATE,
+                                )
+                                st.session_state.first_response_sent.add(row["ticket_id"])
+                                st.session_state.approval_history.append({
+                                    "time": datetime.now().strftime("%H:%M:%S"),
+                                    "ticket_id": row["ticket_id"],
+                                    "type": "first_response",
+                                    "draft": FIRST_RESPONSE_TEMPLATE,
+                                })
+                                st.session_state.show_first_response_preview[row["ticket_id"]] = False
+                                st.success(f"Email actually sent to {demo_recipient} for {row['ticket_id']}.")
+                                st.rerun()
+                            except Exception as e:
+                                st.error(f"Email send failed: {e}")
                     if col_b.button("❌ Cancel", key=f"cancel_{row['ticket_id']}", width="stretch"):
                         st.session_state.show_first_response_preview[row["ticket_id"]] = False
                         st.rerun()
