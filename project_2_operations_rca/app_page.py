@@ -114,6 +114,18 @@ def show_page():
     st.subheader("🚨 SLA Incident Responder")
     st.caption("Auto-send fixed first response + AI-drafted resolution updates")
 
+    # --- session state (must be initialized before anything reads it) ---
+    if "selected_ticket_id" not in st.session_state:
+        st.session_state.selected_ticket_id = None
+    if "generated_draft" not in st.session_state:
+        st.session_state.generated_draft = None
+    if "approval_history" not in st.session_state:
+        st.session_state.approval_history = []
+    if "first_response_sent" not in st.session_state:
+        st.session_state.first_response_sent = set()
+    if "show_first_response_preview" not in st.session_state:
+        st.session_state.show_first_response_preview = {}
+
     df = load_tickets()
 
     # Pull credentials and configurations from the shared session state
