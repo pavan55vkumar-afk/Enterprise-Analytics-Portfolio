@@ -1,0 +1,149 @@
+import streamlit as st
+from google import genai
+import anthropic
+
+DEFAULT_MASTER_RESUME = """PAVAN KUMAR VAIKUTHERISAL
+Hyderabad, India | +91 90597 45757 | Pavan55vkumar@gmail.com
+LinkedIn: linkedin.com/in/pavankumarv55 | GitHub: github.com/pavan55vkumar-afk
+
+SUMMARY:
+Client-facing Operations Analyst and self-taught programmer with 3+ years of experience at Deloitte and MediaMint. Specialized in managing, troubleshooting, and resolving data exceptions within Epic Systems and CRM platform integrations (Zendesk, Salesforce, JIRA). Skilled in SQL, Python, and workflow automation.
+
+EXPERIENCE:
+Deloitte Consulting Pvt. Ltd. | Lead Junior Associate — Operations Support
+Hyderabad, India | Jan 2025 – Present
+- Troubleshoot and debug transactional data pipelines from Epic Systems using Python and Alteryx, resolving formatting errors to save 8 hours of manual analysis weekly.
+- Audit Epic EHR account logs for US healthcare revenue cycle pilots handling USD 2K–6K in daily throughput, identifying validation discrepancies and resolving account sync issues.
+- Monitor SLA/TAT compliance dashboards in Tableau and Excel across 3 operational segments, proactively flagging bottleneck trends.
+- Placed 12th of 57 teams at Deloitte AWS GameDay building multi-agent systems on AWS Bedrock AgentCore.
+
+MediaMint | Campaign Manager — Performance Reporting
+Hyderabad, India | Jul 2024 – Dec 2024
+- Monitored ad campaign performance tracking systems (CM360, GA4, GTM), troubleshooting tracking tag fire errors and data discrepancies.
+- Analyzed performance anomaly trends using automated GA4 API scripts, contributing to a 15% reduction in technical escalation tickets.
+
+MediaMint | Customer Operations Specialist — CRM & Support
+Hyderabad, India | Apr 2023 – Jul 2024
+- Resolved 300–450+ complex technical support tickets monthly under strict SLA guidelines via Zendesk, utilizing root-cause analysis.
+- Documented and tracked platform bugs in JIRA, collaborating with development teams to test configurations and verify fixes.
+
+SKILLS:
+- Core Skills: Epic Systems EHR, Application Support, Troubleshooting, Incident Management, SLA Governance, Anomaly Diagnostics
+- Tools & CRMs: Zendesk Support, JIRA Ticket Tracking, Salesforce Admin, Alteryx Workflow, Tableau, SharePoint
+- Languages & Data: SQL (DuckDB, PostgreSQL), Python (pandas, Streamlit, API clients), REST APIs, JSON data integrations
+
+EDUCATION & CERTIFICATIONS:
+- MBA, Operations Management — IGNOU (Distance) | Expected 2027
+- BBA, Business Analytics — Koneru Lakshmaiah University | 2023
+- Certifications: Epic Systems Revenue Cycle (Deloitte Training) · Alteryx Designer Core · AWS Bedrock & Generative AI"""
+
+DEFAULT_JOB_DESCRIPTION = """Accenture - Application Support Engineer
+Proficiency in EPIC Systems.
+Strong analytical skills to diagnose and resolve software issues.
+Experience with troubleshooting and debugging applications.
+Familiarity with system integration and data flow management.
+Ability to communicate technical information effectively to non-technical users.
+Expected to perform independently and become an SME.
+Documentation of processes and procedures to enhance team knowledge."""
+
+SYSTEM_PROMPT = """
+You are an expert recruitment consultant and career agent. Your task is to customize a candidate's master resume to fit a target job description.
+
+CRITICAL INSTRUCTION FOR TRUTHFULNESS:
+1. You MUST NEVER fabricate, exaggerate, or invent any experience, metrics, skills, projects, or job titles.
+2. You can ONLY highlight, rephrase, and prioritize existing facts already listed in the candidate's master resume.
+3. If a key skill is required in the job description but NOT present in the master resume, do NOT add it. Keep it missing.
+4. All adjusted metrics (percentages, values) must exactly match the ones present in the master resume.
+5. Output the result in clean Markdown format. Output the final resume ONLY.
+"""
+
+def show_page():
+    st.subheader("💼 Job-Search & Resume-Tailoring Agent")
+    st.caption("Custom-tailor resumes factually against target JDs using LLM guardrails.")
+
+    # State variables
+    if "tailored_output" not in st.session_state:
+        st.session_state.tailored_output = None
+
+    col_input, col_tailor = st.columns([1, 1.3])
+
+    with col_input:
+        st.markdown("### Inputs")
+        master_resume = st.text_area("Your Master Experience Profile:", value=DEFAULT_MASTER_RESUME, height=220)
+        job_desc = st.text_area("Paste Target Job Description (JD):", value=DEFAULT_JOB_DESCRIPTION, height=200)
+
+        # Pull settings from root session state
+        api_key = st.session_state.get("gemini_key", "")
+        model_choice = st.session_state.get("gemini_model", "gemini-2.0-flash")
+        temperature = st.session_state.get("temperature", 0.2) # Defaults to 0.2 for strict facts
+        max_tokens = st.session_state.get("max_tokens", 500)
+        use_claude = st.session_state.get("use_claude", False)
+        claude_key = st.session_state.get("claude_key", "")
+
+        tailor_btn = st.button("🚀 Tailor Resume", type="primary", use_container_width=True)
+
+    with col_tailor:
+        st.markdown("### 📝 Tailored Resume Output")
+        
+        if tailor_btn:
+            if use_claude and not claude_key:
+                st.error("Please set your Anthropic Claude API Key in the sidebar.")
+            elif not use_claude and not api_key:
+                st.error("Please set your Google Gemini API Key in the sidebar.")
+            else:
+                with st.spinner("AI is custom-tailoring your experience profile..."):
+                    prompt = f"""
+                    Here is my Master Resume:
+                    <master_resume>
+                    {master_resume}
+                    </master_resume>
+
+                    Here is the Target Job Description:
+                    <job_description>
+                    {job_desc}
+                    </job_description>
+
+                    Please customize my resume by highlighting my most relevant operations and Epic systems experiences that align with the job description. Follow the strict anti-fabrication rules provided in the system prompt.
+                    """
+                    
+                    try:
+                        if use_claude:
+                            client = anthropic.Anthropic(api_key=claude_key)
+                            message = client.messages.create(
+                                model="claude-3-5-sonnet",
+                                max_tokens=max_tokens,
+                                temperature=temperature,
+                                system=SYSTEM_PROMPT,
+                                messages=[{"role": "user", "content": prompt}]
+                            )
+                            st.session_state.tailored_output = message.content[0].text
+                        else:
+                            client = genai.Client(api_key=api_key)
+                            resp = client.models.generate_content(
+                                model=model_choice,
+                                contents=prompt,
+                                config={
+                                    "system_instruction": SYSTEM_PROMPT,
+                                    "temperature": temperature,
+                                    "max_output_tokens": max_tokens,
+                                    "thinking_config": {"thinking_budget": 0},
+                                }
+                            )
+                            st.session_state.tailored_output = resp.text
+                        st.success("Resume tailored factually!")
+                    except Exception as e:
+                        st.error(f"Tailoring failed: {e}")
+
+        if st.session_state.tailored_output:
+            st.markdown("#### Preview:")
+            st.markdown(st.session_state.tailored_output)
+            st.divider()
+            st.download_button(
+                label="📥 Download Tailored Resume (Markdown)",
+                data=st.session_state.tailored_output,
+                file_name="Tailored_Resume.md",
+                mime="text/markdown",
+                use_container_width=True
+            )
+        else:
+            st.info("Paste a Job Description on the left and click 'Tailor Resume' to generate a tailored factual profile.")
