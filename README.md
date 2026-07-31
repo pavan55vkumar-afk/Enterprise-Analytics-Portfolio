@@ -1,70 +1,58 @@
-# My Business Analytics Portfolio — Pavan Kumar Vaikutherisal
+# Enterprise Analytics & AI Portfolio — Pavan Kumar Vaikutherisal
 
-Hello! I am Pavan, and welcome to my analytics portfolio. 
+Welcome to my portfolio! I am an Operations Analyst & Business Strategist with 3+ years of client-facing experience at Deloitte and MediaMint. 
 
-Over the last three years working at Deloitte and MediaMint, I have spent countless hours inside transaction systems, CRM databases, and operations dashboards. I have felt the daily pressure of keeping SLAs green, the headache of manually cleaning messy customer data, and the challenge of proving campaign ROI to stakeholders. 
+I specialize in managing, auditing, and troubleshooting high-volume transaction systems (Epic Systems EHR, Zendesk, JIRA, Salesforce) and applying AI/LLM automation to solve operational bottlenecks.
 
-I built this portfolio to bridge the gap between my operational experience and hands-on coding. Instead of sharing confidential company data, I generated realistic synthetic datasets from scratch and wrote the SQL and Python queries myself to solve the exact operational problems I face every day. 
-
-Each project below is a real challenge I wanted to tackle, showing how clean code can make business teams work smarter.
+Each project below represents an operational challenge I tackled, demonstrating how Python, SQL, Streamlit, and LLM prompt engineering turn high-volume operational logs into proactive, zero-fabrication automated systems.
 
 ---
 
-## Projects
+## 🚀 Interactive Streamlit Web Application
 
-### 1. LLM-Powered Customer RFM & Cohort Copywriter
+👉 **[Live Enterprise AI Portfolio Dashboard](https://enterprise-analytics-portfolio-nsbdpzsq8qyra3tqxs7swa.streamlit.app/)**
 
-**Business question:** Which customer groups drive repeat revenue, and how can we automate personalized re-engagement campaigns at scale?
+Explore both live projects in an interactive control console built with Streamlit, Plotly, and AI API integrations.
 
-**What I delivered:** A SQL-based RFM (Recency, Frequency, Monetary) segmentation model integrated with the Claude API to automatically generate hyper-targeted promotional copies based on a cohort's buying patterns.
+---
 
-**Dataset:** 500 customers and 929 transactional order records.
+## 📁 Projects Showcase
 
-**Selected findings & capabilities:**
-- Segmented the customer base into actionable cohorts (Champions, At-Risk High-Value, Lost) using SQL window functions.
-- Integrated the Claude API to read cohort order profiles (e.g., top-purchased categories like "Home Office") and automatically draft customized email incentives.
-- Replaced a manual copywriting process with a 2-second dynamic copy generator.
+### 1. 🚨 SLA Incident Warning & Response System (`project_1_operations_rca`)
 
-[View project case study](./project_1_sales_cohort/README.md)
+**Business Challenge:** How can support operations teams prevent customer satisfaction (CSAT) crashes when service tickets approach their SLA expiration window?
 
-### 2. AI-Powered SLA Incident Warning & Response System
+**Solution Delivered:** A Streamlit incident triage console and automated alerting pipeline. It flags tickets reaching 75%+ SLA elapsed threshold, triggers immediate first responses via Gmail SMTP SSL, and leverages LLMs to draft contextual resolution updates for human approval.
 
-**Business question:** How can we prevent customer satisfaction (CSAT) drops when support tickets approach their SLA limit?
+**Key Features & Findings:**
+- **CSAT Quantified:** Demonstrated that SLA breaches cause a catastrophic CSAT rating drop from **3.98/5.0 down to 1.44/5.0** (a 2.54-point drop).
+- **Automated First Acknowledgment:** Fired instant template acknowledgments via Gmail SMTP port 465 to confirm receipt without agent overhead.
+- **Human-in-the-Loop AI Drafts:** Utilized Gemini/Claude to draft warm, factual resolution updates based on ticket category and priority, keeping human review before sending.
+- **Analytics & Bottlenecks:** Integrated Plotly Pareto charts isolating *Delivery Issues* as the primary 80/20 breach bottleneck.
 
-**What I delivered:** A Python workflow that detects support ticket delays at a 75% SLA elapsed threshold and calls the Claude API to generate highly personalized, context-aware recovery emails.
+📂 **[View Project 1 Case Study & Source Code](./project_1_operations_rca/README.md)**
 
-**Dataset:** 1,000 operations service tickets.
+---
 
-**Selected findings & capabilities:**
-- Found that SLA breaches cause a catastrophic CSAT drop from 3.98/5.0 down to 1.44/5.0.
-- Implemented a proactive trigger to query customer profile metadata (lifetime value, category, history) when a ticket is running late.
-- Programmed Claude to generate high-empathy status updates and troubleshooting recommendations, saving agents 15 minutes per incident.
+### 2. 💼 AI Job-Search & Resume-Tailoring Agent (`project_2_job_agent`)
 
-[View project case study](./project_2_operations_rca/README.md)
+**Business Challenge:** How can candidates automate high-volume resume customization for target job descriptions while guaranteeing **100% factual truthfulness and zero fabrication**?
 
-### 3. AI Job-Search & Resume-Tailoring Agent
+**Solution Delivered:** An AI prompt engineering pipeline and Streamlit workspace that extracts key competencies from target Job Descriptions and aligns them with a candidate's master experience profile under strict anti-hallucination guardrails.
 
-**Business question:** How can we automate personalized resume tailoring for high-volume applications while maintaining 100% truthfulness and zero fabrication?
+**Key Features & Findings:**
+- **Zero-Fabrication Guardrail:** Engineered system prompts that strictly prohibit inventing skills, metrics, or titles not present in the master profile.
+- **Deterministic Generation:** Configured a low-temperature (`0.2 / 0.3`) sampling parameter to ensure factual, repeatable profile alignment.
+- **Time Savings:** Reduced manual resume tailoring time from **45 minutes to under 10 seconds** per application.
+- **One-Click Export:** Renders formatted, ATS-friendly Markdown outputs ready for immediate application submission.
 
-**What I delivered:** A Python prompt pipeline and CLI tool using the Claude API that extracts job description keywords and matches them to verified master experience profiles using strict constraints.
+📂 **[View Project 2 Case Study & Source Code](./project_2_job_agent/README.md)**
 
-**Dataset:** Personal master experience logs and sample target job descriptions.
+---
 
-**Selected capabilities & findings:**
-- Developed an anti-fabrication prompt system that restricts Claude from generating any unverified experiences.
-- Configured a low-temperature (0.2) LLM generation to ensure deterministic, fact-grounded outputs.
-- Reduced manual tailoring time from 45 minutes to under 10 seconds per application.
+## 🛠️ Core Technical Skills
 
-[View project case study](./project_3_job_agent/README.md)
-
-## Skills Demonstrated
-
-- Business problem framing and KPI definition
-- SQL using CTEs, window functions, cohort analysis, and RFM segmentation
-- Python-based analysis, scripting, and CLI application development
-- Claude LLM API integration and structured prompt engineering
-- SLA/TAT monitoring and proactive incident automation
-- Local automation scripting and anti-fabrication pipeline design
-
-
-
+- **Operations & Systems:** Epic Systems EHR, SLA Triage, Incident Management, Anomaly Diagnostics, Process SOP Documentation
+- **Tools & CRMs:** Zendesk Support, JIRA Ticketing, Salesforce Admin, Tableau, Alteryx Workflow
+- **Data & Scripting:** SQL (DuckDB, PostgreSQL, CTEs, Window Functions), Python (pandas, numpy, Streamlit, Plotly)
+- **AI & Prompt Engineering:** Anthropic Claude API, Google Gemini API, Zero-Fabrication Guardrails, System Prompt Architecture
