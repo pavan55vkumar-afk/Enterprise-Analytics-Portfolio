@@ -229,7 +229,17 @@ def show_page():
                         col_a, col_b = st.columns(2)
                         if col_a.button("✅ Confirm & send", key=f"confirm_{row['ticket_id']}", width="stretch"):
                             if not sender_email or not sender_app_password or not demo_recipient:
-                                st.warning("Open **📧 Email (SMTP) Settings** in the sidebar and fill in the sender, App Password, and recipient first.")
+                                # Fall back to mock simulation so it works instantly out of the box
+                                st.session_state.first_response_sent.add(row["ticket_id"])
+                                st.session_state.approval_history.append({
+                                    "time": datetime.now().strftime("%H:%M:%S"),
+                                    "ticket_id": row["ticket_id"],
+                                    "type": "first_response",
+                                    "draft": FIRST_RESPONSE_TEMPLATE,
+                                })
+                                st.session_state.show_first_response_preview[row["ticket_id"]] = False
+                                st.toast(f"📧 [Demo Mode] Simulated dispatch: First response email queued for {row['ticket_id']}", icon="✅")
+                                st.rerun()
                             else:
                                 try:
                                     send_real_email(
