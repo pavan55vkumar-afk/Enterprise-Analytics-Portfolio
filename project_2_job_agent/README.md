@@ -1,4 +1,8 @@
-# AI Job-Search & Resume-Tailoring Agent
+# 💼 AI Job-Search & Resume-Tailoring Agent
+
+[![Live Web App](https://img.shields.io/badge/Live_Streamlit_App-🚀_Open_App-4F46E5?style=for-the-badge)](https://enterprise-analytics-portfolio-nsbdpzsq8qyra3tqxs7swa.streamlit.app/)
+
+👉 **[Launch Live Streamlit Application](https://enterprise-analytics-portfolio-nsbdpzsq8qyra3tqxs7swa.streamlit.app/)**
 
 **Business question:** Custom-tailoring a resume for complex operational and technical roles takes up to 45 minutes per application. Standard generative AI tools are prone to hallucinating experience and metrics, which erodes trust. How can we automate this process while maintaining a strict, 100% truthfulness constraint?
 

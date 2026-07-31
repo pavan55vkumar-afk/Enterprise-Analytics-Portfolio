@@ -1,8 +1,12 @@
 import sys
 import os
 
-# Add root folder to path so parent-level imports work when running from this sub-directory
-sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), "..")))
+# Add root folder to path so parent-level imports work when running from any sub-directory
+root_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+if root_dir not in sys.path:
+    sys.path.insert(0, root_dir)
+if os.path.dirname(__file__) not in sys.path:
+    sys.path.insert(0, os.path.dirname(__file__))
 
 import streamlit as st
 
@@ -268,14 +272,12 @@ elif selected_page == "🚨 Project 1: SLA Incident Responder":
     try:
         import project_1_operations_rca.app_page as p1_page
         p1_page.show_page()
-    except Exception:
-        st.error("⚠️ The SLA dashboard hit an unexpected issue and is resetting. "
-                 "Please refresh the page — if it persists, re-select the project from the sidebar.")
+    except Exception as e:
+        st.error(f"⚠️ The SLA dashboard hit an unexpected issue: {e}")
 
 elif selected_page == "💼 Project 2: Job-Search Agent":
     try:
         import project_2_job_agent.app_page as p2_page
         p2_page.show_page()
-    except Exception:
-        st.error("⚠️ The Job-Search Agent hit an unexpected issue and is resetting. "
-                 "Please refresh the page — if it persists, re-select the project from the sidebar.")
+    except Exception as e:
+        st.error(f"⚠️ The Job-Search Agent hit an unexpected issue: {e}")

@@ -1,11 +1,15 @@
-# 🛠️ Operational SLA Bottleneck Analysis
+# 🛠️ Operational SLA Bottleneck Analysis & Incident Responder
 
+[![Live Web App](https://img.shields.io/badge/Live_Streamlit_App-🚀_Open_App-4F46E5?style=for-the-badge)](https://enterprise-analytics-portfolio-nsbdpzsq8qyra3tqxs7swa.streamlit.app/)
 [![Python](https://img.shields.io/badge/Python-3.9-blue?style=flat-square&logo=python&logoColor=white)](project2_rca_simulation.py)
 [![Pandas](https://img.shields.io/badge/Pandas-2.0-blue?style=flat-square&logo=pandas&logoColor=white)](#)
 [![Jupyter Notebook](https://img.shields.io/badge/Jupyter-Notebook-orange?style=flat-square&logo=jupyter&logoColor=white)](project2_operations_sla_rca.ipynb)
 [![Status](https://img.shields.io/badge/Status-Complete-green?style=flat-square)](#)
 
 ---
+
+## 🌐 Live Interactive Application
+👉 **[Launch Live Streamlit Dashboard](https://enterprise-analytics-portfolio-nsbdpzsq8qyra3tqxs7swa.streamlit.app/)**
 
 ## 📖 Project Overview & Notebook Link
 This project features an interactive **[Jupyter Notebook (project2_operations_sla_rca.ipynb)](project2_operations_sla_rca.ipynb)** showing the live execution, results, and visualizations. 
